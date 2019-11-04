@@ -9,12 +9,19 @@ import Meta from 'vue-meta';
 import { createRouter } from '@/.lavas/router';
 import { createStore } from '@/.lavas/store';
 import AppComponent from './App.vue';
-import 'element-ui/lib/theme-chalk/index.css';
-import { Button, Select } from 'element-ui';
+import '@/assets/scss/element-variables.scss'
+import { Button, Dropdown, DropdownMenu, DropdownItem, Divider } from 'element-ui';
+import avatar from 'vue-avatar';
 
 Vue.use(Meta);
 
 Vue.use(Button)
+    .use(Dropdown)
+    .use(DropdownItem)
+    .use(Divider)
+    .use(DropdownMenu);
+
+Vue.component('avatar', avatar);
 
 Vue.config.productionTip = false;
 

@@ -1,6 +1,15 @@
 @import '../css/reset.css';
 
+:root {
+    --color-primary: #f9320c;
+}
+
 html,
 body {
     height: 100%;
+}
+
+::selection {
+    background-color: #f9330cb7;
+    color: white;
 }
