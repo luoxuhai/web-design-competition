@@ -1,20 +1,22 @@
 <template>
   <div id="app">
-    <transition
-      :name="pageTransitionEffect"
-      @before-enter="handleBeforeEnter"
-      @after-enter="handleAfterEnter"
-      @before-leave="handleBeforeLeave"
-    >
-      <keep-alive :include="[...keepAlivePages]">
-        <router-view
-          :key="routerViewKey"
-          :class="['app-view', pageTransitionClass]"
-          :data-page-id="$route.fullPath"
-        ></router-view>
-      </keep-alive>
-    </transition>
-    <update-toast></update-toast>
+    <!-- <gemini-scrollbar class="scroll-bar" :forceGemini="false"> -->
+      <transition
+        :name="pageTransitionEffect"
+        @before-enter="handleBeforeEnter"
+        @after-enter="handleAfterEnter"
+        @before-leave="handleBeforeLeave"
+      >
+        <keep-alive :include="[...keepAlivePages]">
+          <router-view
+            :key="routerViewKey"
+            :class="['app-view', pageTransitionClass]"
+            :data-page-id="$route.fullPath"
+          ></router-view>
+        </keep-alive>
+      </transition>
+      <update-toast></update-toast>
+    <!-- </gemini-scrollbar> -->
   </div>
 </template>
 
@@ -29,7 +31,7 @@ const ENABLE_SCROLL_CLASS = "app-view-scroll-enabled";
 export default {
   name: "app",
   components: {
-    UpdateToast,
+    UpdateToast
   },
   computed: {
     ...mapState("pageTransition", {
@@ -130,5 +132,20 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.scroll-bar {
+  height: 100vh;
+}
+
+.gm-scrollbar.-vertical {
+  width: 8px;
+  .thumb {
+    border-radius: 4px;
+    background-color: lighten(#f9320c, 30);
+    &:hover {
+      background-color: lighten(#f9320c, 10);
+    }
+  }
 }
 </style>

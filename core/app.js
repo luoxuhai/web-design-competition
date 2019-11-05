@@ -9,9 +9,16 @@ import Meta from 'vue-meta';
 import { createRouter } from '@/.lavas/router';
 import { createStore } from '@/.lavas/store';
 import AppComponent from './App.vue';
-import '@/assets/scss/element-variables.scss'
-import { Button, Dropdown, DropdownMenu, DropdownItem, Divider } from 'element-ui';
+import '@/assets/scss/element-variables.scss';
+import {
+    Button,
+    Dropdown,
+    DropdownMenu,
+    DropdownItem,
+    Divider
+} from 'element-ui';
 import avatar from 'vue-avatar';
+import GeminiScrollbar from 'vue-gemini-scrollbar';
 
 Vue.use(Meta);
 
@@ -20,6 +27,8 @@ Vue.use(Button)
     .use(DropdownItem)
     .use(Divider)
     .use(DropdownMenu);
+
+Vue.use(GeminiScrollbar);
 
 Vue.component('avatar', avatar);
 

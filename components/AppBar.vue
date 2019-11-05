@@ -41,7 +41,6 @@ export default {
 
 <style lang='scss' scoped>
 .appbar {
-  width: 100vw;
   height: 120px;
 
   &__wrapper {
