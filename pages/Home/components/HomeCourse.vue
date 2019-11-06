@@ -64,7 +64,7 @@ export default {
 
 <style lang='scss' scoped>
 .course {
-  width: 60%;
+  flex: 1;
   background-color: var(--color-primary);
   overflow: hidden;
   padding-top: 140px;
@@ -90,9 +90,9 @@ export default {
 
   #course-scroll {
     position: relative;
-    left: 260px;
+    left: 340px;
     right: 0;
-    top: 250px;
+    top: 100px;
     overflow: hidden;
   }
 
@@ -101,11 +101,11 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     flex-shrink: 0;
-    width: 250px;
-    height: 450px;
+    width: 200px;
+    height: 380px;
     margin-right: 50px;
     padding: 20px 15px;
-    border-radius: 15px;
+    border-radius: 10px;
     background-color: #fff;
 
     .divider {

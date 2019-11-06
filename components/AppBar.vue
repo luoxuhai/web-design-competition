@@ -41,13 +41,14 @@ export default {
 
 <style lang='scss' scoped>
 .appbar {
-  height: 120px;
+  height: 100px;
 
   &__wrapper {
     min-width: 360px;
-    max-width: 1120px;
+    max-width: 1400px;
     height: inherit;
     margin: 0 auto;
+    padding: 0 10px;
 
     &-list {
       display: flex;

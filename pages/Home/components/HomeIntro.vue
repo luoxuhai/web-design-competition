@@ -21,7 +21,7 @@ export default {
 
 <style lang='scss' scoped>
 .intro {
-  width: 40%;
+  width: 32%;
   padding-top: 140px;
 
   &__wrapper {
@@ -31,8 +31,8 @@ export default {
   &__title {
     position: relative;
     width: 534px;
-    font-size: 64px;
-    line-height: 74px;
+    font-size: 60px;
+    line-height: 70px;
     font-weight: 500;
     background: linear-gradient(
       to right,
@@ -67,14 +67,15 @@ export default {
 
   &__button {
     position: relative;
-    left: 80px;
-    width: 400px;
+    top: 20px;
+    left: 120px;
+    width: 320px;
     height: 60px;
-    font-size: 24px;
+    font-size: 20px;
     border-radius: 30px;
     border: none;
     background-color: #7200da;
-    letter-spacing: .2em;
+    letter-spacing: .1em;
     color: white;
   }
 }

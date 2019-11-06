@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <!-- <gemini-scrollbar class="scroll-bar" :forceGemini="false"> -->
+    <gemini-scrollbar class="scroll-bar" :forceGemini="false">
       <transition
         :name="pageTransitionEffect"
         @before-enter="handleBeforeEnter"
@@ -16,7 +16,7 @@
         </keep-alive>
       </transition>
       <update-toast></update-toast>
-    <!-- </gemini-scrollbar> -->
+    </gemini-scrollbar>
   </div>
 </template>
 
