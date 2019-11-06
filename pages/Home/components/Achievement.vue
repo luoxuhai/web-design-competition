@@ -9,7 +9,7 @@
         >党的十八大以来中国的发展和成就，以及十九大报告中习近平总书记提出的中国特色社会主义进入新时代这一重大论述。</small>
       </li>
       <li class="achievement__list-item hvr-bob" v-for="(item, index) of achievements" :key="index">
-        <router-link class="achievement__list-content" to>
+        <router-link class="achievement__list-content" :to="{path: '/article/12554'}">
           <h2 class="achievement__item-title">{{item.title}}</h2>
           <div>
             <small class="achievement__item-sub">{{item.sub}}</small>

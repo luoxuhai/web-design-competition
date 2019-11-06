@@ -25,6 +25,7 @@
     "es6-promise": "^4.1.1",
     "iscroll": "5.1.0",
     "lavas-core-vue": "^1.1.11",
+    "markdown-it": "^10.0.0",
     "stoppable": "^1.0.4",
     "vue-avatar": "^2.1.8",
     "vue-gemini-scrollbar": "^2.0.1"

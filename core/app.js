@@ -15,7 +15,9 @@ import {
     Dropdown,
     DropdownMenu,
     DropdownItem,
-    Divider
+    Divider,
+    Backtop,
+    Input
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import GeminiScrollbar from 'vue-gemini-scrollbar';
@@ -26,6 +28,8 @@ Vue.use(Button)
     .use(Dropdown)
     .use(DropdownItem)
     .use(Divider)
+    .use(Backtop)
+    .use(Input)
     .use(DropdownMenu);
 
 Vue.use(GeminiScrollbar);

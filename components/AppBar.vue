@@ -12,6 +12,9 @@
           </a>
           <h1 class="logo__title">芙蓉失新颜</h1>
         </li>
+        <li class="title">
+          <slot />
+        </li>
         <li class="user">
           <el-dropdown>
             <avatar class="user__avatar" username="登录" :size="40" initials />
@@ -40,8 +43,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
+@import "@/assets/scss/_mixins.scss";
+
 .appbar {
-  height: 100px;
+  height: 60px;
 
   &__wrapper {
     min-width: 360px;
@@ -72,6 +77,14 @@ export default {
           font-weight: bold;
           font-size: 16px;
         }
+      }
+
+      .title {
+        max-width: 640px;
+        @include ellipsis;
+        font-weight: 500;
+        font-size: 24px;
+        color: #292525;
       }
 
       .user {
