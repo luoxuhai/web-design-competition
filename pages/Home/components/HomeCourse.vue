@@ -1,11 +1,13 @@
 <template>
   <div class="course">
-    <section id="course-scroll">
+    <section id="course-scroll" @click="handleToCourseClick">
       <ul class="course__wrapper">
-        <li class="course__item" v-for="(item, index) of courses" :key="index">
+        <li class="course__item" v-for="(item, index) of courses" :key="index" :data-id="index">
           <p class="course__learning-count">{{item.learning_count}}人学习中</p>
           <section>
-            <h2 class="course__title">{{item.title}}</h2>
+            <h2 class="course__title">
+              <router-link :to="{path: '/course/114'}">{{item.title}}</router-link>
+            </h2>
             <hr class="divider" />
             <div class="course__author">
               <avatar
@@ -41,6 +43,17 @@ export default {
         }
       }))
     };
+  },
+
+  methods: {
+    handleToCourseClick(e) {
+      if(e.target.tagName === 'LI') {
+        this.$router.push({
+          path: `/course/${e.target.dataset.id}`
+        })
+      }
+      
+    }
   },
 
   mounted() {
@@ -107,6 +120,7 @@ export default {
     padding: 20px 15px;
     border-radius: 10px;
     background-color: #fff;
+    cursor: pointer;
 
     .divider {
       width: 70px;

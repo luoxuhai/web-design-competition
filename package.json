@@ -21,14 +21,18 @@
     "babel-polyfill": "^6.26.0",
     "babel-preset-vue-app": "^1.3.1",
     "cross-env": "^5.1.1",
+    "dayjs": "^1.8.17",
     "element-ui": "^2.12.0",
     "es6-promise": "^4.1.1",
     "iscroll": "5.1.0",
     "lavas-core-vue": "^1.1.11",
+    "localforage": "^1.7.3",
     "markdown-it": "^10.0.0",
+    "socket.io-client": "^2.3.0",
     "stoppable": "^1.0.4",
     "vue-avatar": "^2.1.8",
-    "vue-gemini-scrollbar": "^2.0.1"
+    "vue-gemini-scrollbar": "^2.0.1",
+    "xgplayer": "^2.2.1"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.5.5",

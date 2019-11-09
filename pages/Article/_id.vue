@@ -10,19 +10,16 @@
     </app-bar>
     <div class="article__wrapper">
       <article class="main">
-        <img
-          class="main__cover"
-          src="https://cdn.sspai.com/2019/10/27/ae7a61f61f246c8efb5d5aa84cd5016e.jpeg?imageMogr2/quality/95/thumbnail/!1420x708r/gravity/Center/crop/1420x708/interlace/1"
-          alt
-        />
-        <h1 class="main__title">MariaDB CEO 痛斥云厂商对开源的无尽掠夺，从不回馈社区</h1>
+        <img class="main__cover" :src="article.cover" :alt="article.title" />
+        <h1 class="main__title">{{article.title}}</h1>
         <section class="main__info">
           <time class="main__info-date">
-            <i class="icon iconshijian" /> 2019.03.01
+            <i class="icon iconshijian" />
+            {{article.createdAt | formatDate}}
           </time>
           <span class="main__info-words">字数 1525</span>
-          <span class="main__info-views">阅读 15</span>
-          <span class="main__info-likes">点赞 2</span>
+          <span class="main__info-views">阅读 {{article.views_count}}</span>
+          <span class="main__info-likes">点赞 {{article.likes_count}}</span>
         </section>
         <div class="main__content">
           在以往的文章中少数派向大家介绍过 Magisk 的 安装方法、如何 隐藏 root 无痛玩机、这款神器以及在 Magisk 下实现 OTA 更新等等技巧，也推荐过不少实用的 Magisk 模块。
@@ -39,15 +36,14 @@
         <div class="aside__item like">
           <i class="icon iconheart" />
         </div>
-        <span class="like-count">8548</span>
+        <span class="like-count">{{article.likes_count || 0}}</span>
         <i class="icon iconcomment" />
-        <span class="comment-count">825</span>
+        <span class="comment-count">{{comment.total || 0}}</span>
         <i class="icon iconstar" />
         <i class="icon iconshare" />
       </aside>
     </div>
-    <Comment />
-    <el-backtop target=".article" :visibility-height="5" />
+    <Comment :comment="comment" />
   </div>
 </template>
 
@@ -55,6 +51,8 @@
 import AppBar from "@/components/AppBar";
 import Comment from "@/components/Comment";
 import md from "markdown-it";
+import Dayjs from "dayjs";
+import { queryArticle, queryArticleComment } from "@/api/article";
 
 export default {
   components: {
@@ -62,14 +60,24 @@ export default {
     Comment
   },
 
+  filters: {
+    formatDate(date) {
+      return Dayjs(date).format("YYYY-MM-DD hh:mm");
+    }
+  },
+
   data() {
     return {
-      opacity: 0
+      opacity: 0,
+      article: {},
+      comment: {}
     };
   },
 
   methods: {
-    changeFadeAppbar({ target: { scrollTop } }) {
+    changeFadeAppbar() {
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
       else this.opacity = 1;
     }
@@ -82,12 +90,23 @@ export default {
   },
 
   mounted() {
-    var result = md().render("# markdown-it rulezz!");
-    document.addEventListener("scroll", this.changeFadeAppbar, true);
+    const id = window.location.pathname.split("/")[2];
+    queryArticle(id).then(({ data }) => {
+      this.article = data;
+    });
+
+    queryArticleComment(id).then(({ data }) => {
+      this.comment = data;
+    });
+
+    this.$nextTick(() => {
+      window.addEventListener("scroll", this.changeFadeAppbar);
+      var result = md().render("# markdown-it rulezz!");
+    });
   },
 
   destroyed() {
-    document.removeEventListener("scroll", this.changeFadeAppbar, true);
+    window.removeEventListener("scroll", this.changeFadeAppbar);
   }
 };
 </script>

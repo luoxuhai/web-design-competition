@@ -9,15 +9,15 @@
     </div>
 
     <header class="comment__header">
-      <h2 class="title">全部评论 {{comments.length}}</h2>
+      <h2 class="title">全部评论 {{comment.total}}</h2>
     </header>
     <ul class="comment__list">
-      <li class="comment__item" v-for="(item, index) of comments" :key="index">
+      <li class="comment__item" v-for="item of comments" :key="item._id">
         <header class="comment__item-header">
-          <avatar class="avatar" username="多巴没有胺" :size="40" initials />
+          <avatar class="avatar" :username="item.user" :size="40" initials />
           <div class="comment__item-info">
-            <h3 class="comment__item-name">多巴没有胺</h3>
-            <time class="comment__item-date">9小时前</time>
+            <h3 class="comment__item-name">{{item.user}}</h3>
+            <time class="comment__item-date">{{item.createdAt | formatDate}}</time>
           </div>
         </header>
         <div class="comment__item-content">
@@ -32,15 +32,25 @@
 </template>
 
 <script>
+import Dayjs from "dayjs";
 export default {
+  props: {
+    comment: Object
+  },
+
+  filters: {
+    formatDate(date) {
+      return Dayjs(date).format("YYYY-MM-DD hh:mm");
+    }
+  },
+
   data() {
     return {
-      comments: [...new Array(5)].map(() => ({
-        content:
-          "今天下午刚好因为装了 edxposed 和某些模块冲突 bootloop 了，可惜是用了逻辑分区的 Android 10，没有 twrp。好在可以先用原版 bootimg 进系统，打开 adb 并勾上一直允许连接。刷回带 magisk 的镜像之后在 bootloop 的画面用 adb wait-for- device ...展开"
-      }))
+      comments: this.comment.comments
     };
-  }
+  },
+
+  methods: {}
 };
 </script>
 

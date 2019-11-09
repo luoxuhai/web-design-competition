@@ -16,18 +16,25 @@
           <slot />
         </li>
         <li class="user">
-          <el-dropdown>
-            <avatar class="user__avatar" username="登录" :size="40" initials />
+          <el-dropdown v-if="token">
+            <el-avatar class="user__avatar" @error="() => true" :size="40" :src="user.avatar">
+              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+            </el-avatar>
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>我的收藏</el-dropdown-item>
               <el-dropdown-item>我的评论</el-dropdown-item>
               <el-dropdown-item>正在学习</el-dropdown-item>
               <el-dropdown-item>
-                <el-button type="danger" size="mini">退出登录</el-button>
+                <el-button @click="handleLogoutClick" type="danger" size="mini">退出登录</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
-          <h3 class="user__name">莲花落故妆</h3>
+          <h3
+            v-if="token"
+            :style="{color: isDark ? '#333' : '#f5f5f5'}"
+            class="user__name"
+          >{{user.nickname}}</h3>
+          <el-button v-else @click="handleLoginClick" size="medium" type="primary" round>登录</el-button>
         </li>
       </ul>
     </nav>
@@ -35,9 +42,40 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from "vuex";
+import { MessageBox } from "element-ui";
 export default {
   data() {
     return {};
+  },
+
+  methods: {
+    ...mapMutations("user", ["logout"]),
+
+    handleLoginClick() {
+      QC.Login.showPopup({
+        appId: "101816819",
+        redirectURI: "http://127.0.0.1:3000/home"
+      });
+    },
+
+    handleLogoutClick() {
+      MessageBox.confirm("确认退出?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        this.logout();
+      });
+    }
+  },
+
+  computed: {
+    ...mapState("user", ["token", "user"]),
+
+    isDark() {
+      return window.location.pathname !== "/home";
+    }
   }
 };
 </script>
@@ -74,7 +112,7 @@ export default {
 
         &__title {
           color: var(--color-primary);
-          font-weight: bold;
+          font-weight: 500;
           font-size: 16px;
         }
       }
@@ -96,6 +134,7 @@ export default {
         }
 
         &__name {
+          @include ellipsis;
           font-size: 16px;
         }
       }

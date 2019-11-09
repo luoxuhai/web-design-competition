@@ -5,7 +5,7 @@
       <home-intro />
       <home-course />
     </div>
-    <achievement />
+    <achievement :articles="articles" />
   </div>
 </template>
 
@@ -14,6 +14,7 @@ import AppBar from "@/components/AppBar";
 import HomeIntro from "./components/HomeIntro";
 import HomeCourse from "./components/HomeCourse";
 import Achievement from "./components/Achievement";
+import { queryArticles } from "@/api/article";
 export default {
   components: {
     AppBar,
@@ -22,7 +23,15 @@ export default {
     Achievement
   },
   data() {
-    return {};
+    return {
+      articles: []
+    };
+  },
+
+  mounted() {
+    queryArticles().then(({ data }) => {
+      this.articles = data;
+    });
   }
 };
 </script>

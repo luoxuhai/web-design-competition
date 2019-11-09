@@ -1,6 +1,7 @@
 import axios from 'axios';
 
-const BASE_URL = process.env.NODE_ENV = 'development' ? 'http://api.mock.com' : 'http://api.mock.com';
+// const BASE_URL = process.env.NODE_ENV = 'development' ? 'http://api.mock.com' : 'http://api.mock.com';
+const BASE_URL = 'http://127.0.0.1:8099';
 
 const errCodeMessage = {
   400: "发出的请求有错误，服务器没有进行新建或修改数据的操作。",

@@ -17,10 +17,13 @@ import {
     DropdownItem,
     Divider,
     Backtop,
-    Input
+    Input,
+    Avatar
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import GeminiScrollbar from 'vue-gemini-scrollbar';
+import 'localforage';
+import AppBar from "@/components/AppBar";
 
 Vue.use(Meta);
 
@@ -30,11 +33,14 @@ Vue.use(Button)
     .use(Divider)
     .use(Backtop)
     .use(Input)
+    .use(Avatar)
     .use(DropdownMenu);
 
 Vue.use(GeminiScrollbar);
 
 Vue.component('avatar', avatar);
+
+Vue.component('AppBar', AppBar);
 
 Vue.config.productionTip = false;
 

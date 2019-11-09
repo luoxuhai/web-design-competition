@@ -4,15 +4,13 @@
       <li class="achievement__list-item achievement__list-header">
         <h2 class="header__title">厉害了，我的国！</h2>
         <hr class="divider" />
-        <small
-          class="header__sub"
-        >党的十八大以来中国的发展和成就，以及十九大报告中习近平总书记提出的中国特色社会主义进入新时代这一重大论述。</small>
+        <small class="header__sub">党的十八大以来中国的发展和成就，以及十九大报告中习近平总书记提出的中国特色社会主义进入新时代这一重大论述。</small>
       </li>
-      <li class="achievement__list-item hvr-bob" v-for="(item, index) of achievements" :key="index">
-        <router-link class="achievement__list-content" :to="{path: '/article/12554'}">
+      <li class="achievement__list-item hvr-bob" v-for="item of articles" :key="item._id">
+        <router-link class="achievement__list-content" :to="{path: `/article/${item._id}`}">
           <h2 class="achievement__item-title">{{item.title}}</h2>
           <div>
-            <small class="achievement__item-sub">{{item.sub}}</small>
+            <small class="achievement__item-sub">{{item.desc}}</small>
           </div>
         </router-link>
       </li>
@@ -22,20 +20,16 @@
 
 <script>
 export default {
-  data() {
-    return {
-      achievements: [...new Array(8)].map(() => ({
-        title: "射电望远镜",
-        sub:
-          "虽然并不是所有人都对 CDPR 的良心制作《巫师3：狂猎》感冒，但「昆特牌」30这个招"
-      }))
-    };
+  props: {
+    articles: Array
   }
 };
 </script>
 
 <style lang='scss' scoped>
 .achievement {
+  display: flex;
+  justify-content: center;
   margin-top: 350px;
 
   &__list {
@@ -43,7 +37,6 @@ export default {
     flex-wrap: wrap;
     justify-content: space-between;
     max-width: 1200px;
-    margin: 0 auto;
     padding: 0 10px;
 
     &-header {

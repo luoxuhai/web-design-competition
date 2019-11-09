@@ -79,6 +79,9 @@ module.exports = {
             transitionClass: 'slide'
         }
     },
+    middleware: {
+        client: ['redirectToHome', 'preventToComment'],
+    },
     serviceWorker: {
         // If true, generate service-worker.js and sw-register.js
         // Default to `false`

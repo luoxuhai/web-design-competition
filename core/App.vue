@@ -1,30 +1,32 @@
 <template>
   <div id="app">
-    <gemini-scrollbar class="scroll-bar" :forceGemini="false">
-      <transition
-        :name="pageTransitionEffect"
-        @before-enter="handleBeforeEnter"
-        @after-enter="handleAfterEnter"
-        @before-leave="handleBeforeLeave"
-      >
-        <keep-alive :include="[...keepAlivePages]">
-          <router-view
-            :key="routerViewKey"
-            :class="['app-view', pageTransitionClass]"
-            :data-page-id="$route.fullPath"
-          ></router-view>
-        </keep-alive>
-      </transition>
-      <update-toast></update-toast>
-    </gemini-scrollbar>
+    <transition
+      :name="pageTransitionEffect"
+      @before-enter="handleBeforeEnter"
+      @after-enter="handleAfterEnter"
+      @before-leave="handleBeforeLeave"
+    >
+      <keep-alive :include="[...keepAlivePages]">
+        <router-view
+          :key="routerViewKey"
+          :class="['app-view', pageTransitionClass]"
+          :data-page-id="$route.fullPath"
+        ></router-view>
+      </keep-alive>
+    </transition>
+    <update-toast></update-toast>
+    <el-backtop style="width: 50px; height: 50px;">
+      <i style="font-size: 30px" class="el-icon-caret-top" />
+    </el-backtop>
   </div>
 </template>
 
 <script>
 import Vue from "vue";
-import { mapState, mapActions } from "vuex";
+import { mapState, mapActions, mapMutations } from "vuex";
 import UpdateToast from "@/components/UpdateToast";
 import { keepAlivePages } from "@/.lavas/router";
+import { login, update } from "@/api/user";
 
 const ENABLE_SCROLL_CLASS = "app-view-scroll-enabled";
 
@@ -65,6 +67,8 @@ export default {
   },
   methods: {
     ...mapActions("scrollBehavior", ["savePageScrollPosition"]),
+
+    ...mapMutations("user", ["login"]),
 
     /**
      * make current page container scrollable,
@@ -122,6 +126,28 @@ export default {
     window.addEventListener("resize", () => {
       setRootFontSize();
     });
+  },
+  mounted() {
+    const data = {};
+    if (QC.Login.check()) {
+      QC.Login.getMe(openId => {
+        data.openId = openId;
+      });
+      QC.api("get_user_info", {})
+        .success(({ data: { nickname, figureurl_2 } }) => {
+          data.nickname = nickname;
+          data.avatar = figureurl_2;
+          login(data).then(({ data: { user, token } }) => {
+            this.login({
+              user,
+              token
+            });
+          });
+        })
+        .error(err => {
+          console.error(err);
+        });
+    }
   }
 };
 </script>
