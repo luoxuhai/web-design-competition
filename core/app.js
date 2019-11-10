@@ -24,7 +24,6 @@ import {
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import GeminiScrollbar from 'vue-gemini-scrollbar';
-import 'localforage';
 import ScrollReveal from 'scrollreveal';
 
 import AppBar from '@/components/AppBar';

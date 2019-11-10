@@ -25,6 +25,7 @@
 import Vue from "vue";
 import { mapState, mapActions, mapMutations } from "vuex";
 import UpdateToast from "@/components/UpdateToast";
+import { Loading } from "element-ui";
 import { keepAlivePages } from "@/.lavas/router";
 import { login, update } from "@/api/user";
 
@@ -129,9 +130,25 @@ export default {
   },
   mounted() {
     const data = {};
+
+    if (localStorage.getItem("isLogin") === "1") {
+      Loading.service({
+        lock: true,
+        text: "登录中",
+        spinner: "el-icon-loading",
+        background: "rgba(0, 0, 0, 0.7)"
+      });
+    }
+
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         data.openId = openId;
+        if (localStorage.getItem("isLogin") === "1") {
+          localStorage.setItem("isLogin", "0");
+          window.open("", "_self");
+          window.close();
+          window.close();
+        }
       });
       QC.api("get_user_info", {})
         .success(({ data: { nickname, figureurl_2 } }) => {

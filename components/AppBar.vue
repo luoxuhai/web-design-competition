@@ -43,7 +43,7 @@
 
 <script>
 import { mapState, mapMutations } from "vuex";
-import { MessageBox } from "element-ui";
+import { MessageBox, Loading } from "element-ui";
 export default {
   props: {
     isDark: {
@@ -60,6 +60,18 @@ export default {
     ...mapMutations("user", ["logout"]),
 
     handleLoginClick() {
+      localStorage.setItem("isLogin", "1");
+      setInterval(() => {
+        if (localStorage.getItem("isLogin") === "0") {
+          Loading.service({
+            lock: true,
+            text: "登录中",
+            spinner: "el-icon-loading",
+            background: "rgba(0, 0, 0, 0.7)"
+          });
+          location.reload();
+        }
+      }, 100);
       QC.Login.showPopup({
         appId: "101816819",
         redirectURI: "http://127.0.0.1:3000/home"
