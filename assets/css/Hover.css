@@ -28,8 +28,7 @@
 .hvr-ripple-out:before {
     content: '';
     position: absolute;
-    border: #7200da solid 6px;
-    border-radius: 35px;
+    border: #e1e1e1 solid 6px;
     top: 0;
     right: 0;
     bottom: 0;
@@ -47,42 +46,42 @@
 /* Bob */
 @-webkit-keyframes hvr-bob {
     0% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
     50% {
-        -webkit-transform: translateY(-4px);
-        transform: translateY(-4px);
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
     }
     100% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
 }
 @keyframes hvr-bob {
     0% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
     50% {
-        -webkit-transform: translateY(-4px);
-        transform: translateY(-4px);
+        -webkit-transform: translateY(-5px);
+        transform: translateY(-5px);
     }
     100% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
 }
 @-webkit-keyframes hvr-bob-float {
     100% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
 }
 @keyframes hvr-bob-float {
     100% {
-        -webkit-transform: translateY(-8px);
-        transform: translateY(-8px);
+        -webkit-transform: translateY(-10px);
+        transform: translateY(-10px);
     }
 }
 .hvr-bob {

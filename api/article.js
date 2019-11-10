@@ -29,7 +29,7 @@ export const comment = data =>
 export const queryArticleComment = id => request(`/v1/comments/article/${id}`);
 
 export const removeArticleComment = (articleId, commentId) =>
-    request(`/v1/comments/article/${commentId}`, {
+    request(`/v1/comments/${commentId}`, {
         method: 'delete',
         params: {
             articleId

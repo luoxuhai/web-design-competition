@@ -16,7 +16,7 @@
     </div>
     <div class="chat-room__input-container">
       <el-input type="textarea" :autosize="{ minRows: 1, maxRows: 4}" placeholder="请输入内容"></el-input>
-      <el-button class="chat-room__input-submit" type="primary">发布</el-button>
+      <el-button class="chat-room__input-submit" icon="el-icon-s-promotion" circle type="primary" />
     </div>
   </div>
 </template>
@@ -60,9 +60,8 @@ export default {
   flex: 1;
   max-width: 700px;
   height: 70vh;
-  margin-left: 40px;
   padding: 10px;
-  background-color: #fff;
+  background-color: #5b81a6;
   border-radius: 5px;
 
   #chat-scroll {
@@ -75,8 +74,8 @@ export default {
     display: flex;
     padding: 10px;
     margin-bottom: 10px;
-    background-color: #fff;
     border-radius: 5px;
+    color: #dcddde;
 
     .avatar {
       margin-right: 10px;
@@ -87,6 +86,10 @@ export default {
       flex-direction: column;
     }
 
+    &-content {
+      font-size: 14px;
+    }
+
     &-header {
       display: flex;
       align-items: center;
@@ -94,15 +97,14 @@ export default {
 
       .username {
         margin-right: 10px;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         margin-bottom: 6px;
-        color: #211615;
+        color: rgb(79, 192, 141);
       }
 
       .date {
-        color: #8e8787;
-        font-size: 14px;
+        font-size: 12px;
       }
     }
   }

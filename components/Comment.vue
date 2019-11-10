@@ -1,30 +1,46 @@
 <template>
   <div class="comment">
     <div class="comment__input-wrapper">
-      <avatar class="avatar" username="登录" :size="40" initials />
+      <el-avatar class="avatar" @error="() => true" :size="40" :src="user.avatar">
+        <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+      </el-avatar>
       <div class="comment__input-content">
-        <el-input type="textarea" :autosize="{ minRows: 4, maxRows: 4}" placeholder="请输入内容"></el-input>
-        <el-button class="comment__input-submit" type="primary">发布</el-button>
+        <el-input
+          v-model="content"
+          type="textarea"
+          :autosize="{ minRows: 4, maxRows: 4}"
+          placeholder="请输入评论"
+        ></el-input>
+        <el-button class="comment__input-submit" @click="handleSubmitComment" type="primary">发布</el-button>
       </div>
     </div>
-
-    <header class="comment__header">
-      <h2 class="title">全部评论 {{comment.total}}</h2>
-    </header>
+    <section-title>全部评论 {{comments ? newComments.length : 0}}</section-title>
     <ul class="comment__list">
-      <li class="comment__item" v-for="item of comments" :key="item._id">
+      <li class="comment__item" v-for="(item, index) of newComments" :key="item._id">
         <header class="comment__item-header">
-          <avatar class="avatar" :username="item.user" :size="40" initials />
+          <el-avatar class="avatar" @error="() => true" :size="40" :src="item.user.avatar">
+            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+          </el-avatar>
           <div class="comment__item-info">
-            <h3 class="comment__item-name">{{item.user}}</h3>
+            <h3 class="comment__item-name">{{item.user.nickname}}</h3>
             <time class="comment__item-date">{{item.createdAt | formatDate}}</time>
           </div>
         </header>
         <div class="comment__item-content">
           <p>{{item.content}}</p>
-          <span>
-            <i class="icon iconheart" /> 0
-          </span>
+          <footer class="comment__item-footer">
+            <span>
+              <i class="icon iconheart" /> 0
+            </span>
+            <el-button
+              v-if="item.user.openId === user.openId"
+              @click="handleDeleteCommentClick(item._id, index)"
+              type="danger"
+              size="small"
+              icon="el-icon-delete"
+              circle
+            ></el-button>
+          </footer>
         </div>
       </li>
     </ul>
@@ -32,10 +48,19 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import Dayjs from "dayjs";
+import { Message, MessageBox } from "element-ui";
+import SectionTitle from "@/components/SectionTitle";
+import { comment, removeArticleComment } from "@/api/article";
 export default {
+  components: {
+    SectionTitle
+  },
+
   props: {
-    comment: Object
+    comments: Array,
+    articleId: String
   },
 
   filters: {
@@ -46,11 +71,62 @@ export default {
 
   data() {
     return {
-      comments: this.comment.comments
+      content: ""
     };
   },
 
-  methods: {}
+  methods: {
+    validateInputValue(next) {
+      if (this.content.replace(/(^\s*)|(\s*$)/g, "").length === 0) {
+        Message.error({ message: "内容不能为空!" });
+        this.content = "";
+        return;
+      } else next();
+    },
+
+    handleSubmitComment() {
+      this.validateInputValue(this.submitComment);
+    },
+
+    submitComment() {
+      const { articleId, content } = this;
+      comment({
+        articleId,
+        content: content.trim()
+      })
+        .then(res => {
+          this.newComments.unshift({
+            user: this.user,
+            content: content.trim()
+          });
+          Message.success({ message: "评论成功!" });
+        })
+        .catch(() => Message.error({ message: "评论失败!" }));
+    },
+
+    handleDeleteCommentClick(commentId, index) {
+      MessageBox.confirm("确认删除?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      }).then(() => {
+        removeArticleComment(this.articleId, commentId)
+          .then(res => {
+            this.newComments.splice(index, 1);
+            Message.success({ message: "已删除!" });
+          })
+          .catch(() => Message.error({ message: "删除失败!" }));
+      });
+    }
+  },
+
+  computed: {
+    ...mapState("user", ["user"]),
+
+    newComments() {
+      return this.comments;
+    }
+  }
 };
 </script>
 
@@ -84,19 +160,6 @@ export default {
     &-submit {
       right: 0;
       margin-top: 15px;
-    }
-  }
-
-  &__header {
-    height: 20px;
-    margin: 40px 0;
-    border-left: 4px solid #ec7259;
-    font-size: 18px;
-    font-weight: 500;
-    line-height: 20px;
-
-    .title {
-      margin-left: 10px;
     }
   }
 
@@ -141,6 +204,12 @@ export default {
         font-size: 16px;
         color: #4c4e4d;
       }
+    }
+
+    &-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
     }
   }
 }

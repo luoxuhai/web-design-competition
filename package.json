@@ -13,6 +13,7 @@
   "dependencies": {
     "@better-scroll/core": "^2.0.0-beta.2",
     "@better-scroll/mouse-wheel": "^2.0.0-beta.2",
+    "@better-scroll/observe-dom": "^2.0.0-beta.2",
     "@better-scroll/scroll-bar": "^2.0.0-beta.2",
     "array-includes": "^3.0.3",
     "array.prototype.find": "^2.0.4",
@@ -25,11 +26,13 @@
     "element-ui": "^2.12.0",
     "es6-promise": "^4.1.1",
     "iscroll": "5.1.0",
+    "jr-qrcode": "^1.1.4",
     "lavas-core-vue": "^1.1.11",
     "localforage": "^1.7.3",
     "markdown-it": "^10.0.0",
     "socket.io-client": "^2.3.0",
     "stoppable": "^1.0.4",
+    "uuid": "^3.3.3",
     "vue-avatar": "^2.1.8",
     "vue-gemini-scrollbar": "^2.0.1",
     "xgplayer": "^2.2.1"

@@ -1,69 +1,161 @@
 <template>
   <div class="course">
-    <app-bar class="appbar">推动中国发展的优秀思想理论集</app-bar>
+    <app-bar
+      :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
+      class="appbar"
+      :isDark="true"
+    >{{course.title}}</app-bar>
     <div class="course__wrapper">
-      <div id="player" />
-      <chat-room />
+      <div class="course__wrapper-video">
+        <section-title>视频课程</section-title>
+        <div id="player" />
+        <div class="course__barrage-container">
+          <el-input
+            type="textarea"
+            v-model="barrage"
+            :autosize="{ minRows: 2, maxRows: 4}"
+            placeholder="请输入弹幕"
+          ></el-input>
+          <el-button
+            class="course__barrage-submit"
+            @click="handleSendBarrageClick"
+            type="primary"
+            round
+            icon="el-icon-s-promotion"
+          >发送</el-button>
+        </div>
+      </div>
+      <div class="course__wrapper-chat">
+        <section-title>课程讨论</section-title>
+        <chat-room />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 import XgPlayer from "xgplayer";
+import uuidv4 from "uuid/v4";
+import { Message } from "element-ui";
+import SectionTitle from "@/components/SectionTitle";
 import ChatRoom from "./components/ChatRoom";
+import {
+  queryCourse,
+  addLearner,
+  addBarrage,
+  queryBarrage
+} from "@/api/course";
+
+let barrageInterval = null;
 
 export default {
   components: {
-    ChatRoom
+    ChatRoom,
+    SectionTitle
   },
+
   data() {
-    return {};
+    return {
+      id: "",
+      opacity: 0,
+      course: {},
+      barrage: ""
+    };
+  },
+
+  methods: {
+    changeFadeAppbar() {
+      const scrollTop =
+        document.documentElement.scrollTop || document.body.scrollTop;
+      if (scrollTop < 150) this.opacity = scrollTop / 150;
+      else this.opacity = 1;
+    },
+
+    validateInputValue(content) {
+      if (content.replace(/(^\s*)|(\s*$)/g, "").length === 0) {
+        Message.error({ message: "内容不能为空!" });
+        return false;
+      } else return true;
+    },
+
+    handleSendBarrageClick() {
+      const { validateInputValue, player, id } = this;
+      if (validateInputValue(this.barrage)) {
+        const barrage = {
+          duration: 15000,
+          id: uuidv4(),
+          start: player.currentTime * 1000 + 800,
+          txt: this.barrage
+        };
+        player.danmu.sendComment(barrage);
+
+        addBarrage({ courseId: id, barrage });
+      } else this.barrage = "";
+    }
+  },
+
+  computed: {
+    backgroundColor() {
+      return `rgba(255, 255, 255, ${this.opacity})`;
+    }
   },
 
   mounted() {
-    const player = new XgPlayer({
+    this.id = window.location.pathname.split("/")[2];
+    window.addEventListener("scroll", this.changeFadeAppbar);
+
+    this.player = new XgPlayer({
       id: "player",
-      url:
-        "//s1.pstatp.com/cdn/expire-1-M/byted-player-videos/1.0.0/xgplayer-demo.mp4",
+      poster: "https://element.eleme.cn/static/theme-index-red.c8e136e.png",
       playsinline: true,
       whitelist: [""],
       playbackRate: [0.5, 1, 1.5, 2],
+      defaultPlaybackRate: 1,
+      rotate: {
+        innerRotate: true,
+        clockwise: false
+      },
       danmu: {
-        comments: [
-          {
-            duration: 15000,
-            id: "2",
-            start: 3000,
-            txt: "长弹幕长弹幕长弹幕",
-            mode: "top"
-          },
-          {
-            duration: 15000,
-            id: "3",
-            start: 4000,
-            txt: "长弹幕长弹幕长弹幕",
-            mode: "bottom"
-          },
-          {
-            duration: 15000,
-            id: "4",
-            start: 5000,
-            txt: "长弹幕长弹幕长弹幕",
-            mode: "scroll"
-          }
-        ],
+        panel: true,
+        comments: [],
         area: {
           start: 0,
           end: 1
         },
         closeDefaultBtn: false,
-        defaultOff: false,
-        panel: false
+        defaultOff: false
       },
-      screenShot: true,
       download: true,
       pip: true
     });
+
+    queryCourse(this.id).then(({ data }) => {
+      this.course = data;
+      this.player.start(data.content);
+    });
+
+    this.player.once("play", () => {
+      // 延时5秒加入课程
+      setTimeout(() => addLearner(this.id), 5000);
+
+      barrageInterval = setInterval(() => {
+        // 获取弹幕
+        queryBarrage(this.id).then(({ data }) => {
+          this.player.danmu.bulletBtn.main.data = data.map(e => ({
+            ...e,
+            style: {
+              color: "#ff9500",
+              fontSize: "24px"
+            }
+          }));
+        });
+      }, 2000);
+    });
+  },
+
+  destroyed() {
+    window.removeEventListener("scroll", this.changeFadeAppbar);
+    clearInterval(barrageInterval);
   }
 };
 </script>
@@ -85,14 +177,37 @@ export default {
     justify-content: center;
     max-width: 1400px;
     margin: 0 auto;
-    margin-top: 100px;
-    padding: 0 5px;
+    margin-top: 40px;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #fff;
 
-    #player {
+    &-video {
       flex: 1;
+      display: flex;
+      flex-direction: column;
       min-width: 400px;
       margin-bottom: 20px;
     }
+
+    &-chat {
+      flex: 1;
+      margin-left: 10%;
+    }
+
+    #player {
+      width: 100% !important;
+    }
+  }
+
+  &__barrage-container {
+    display: flex;
+    align-items: flex-end;
+    margin-top: 40px;
+  }
+
+  &__barrage-submit {
+    margin-left: 10px;
   }
 }
 </style>

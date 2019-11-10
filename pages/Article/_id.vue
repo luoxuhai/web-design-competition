@@ -3,14 +3,15 @@
     <app-bar
       class="appbar"
       :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
+      :isDark="true"
     >
       <transition name="el-zoom-in-top">
         <div v-show="opacity === 1" class="transition-box">MariaDB CEO 痛斥云厂商对开源的无尽掠夺，从不回馈社区</div>
       </transition>
     </app-bar>
     <div class="article__wrapper">
-      <article class="main">
-        <img class="main__cover" :src="article.cover" :alt="article.title" />
+      <article id="article" class="main">
+        <img class="main__cover" :src="article.cover" :alt="article.title" :title="article.title" />
         <h1 class="main__title">{{article.title}}</h1>
         <section class="main__info">
           <time class="main__info-date">
@@ -19,7 +20,7 @@
           </time>
           <span class="main__info-words">字数 1525</span>
           <span class="main__info-views">阅读 {{article.views_count}}</span>
-          <span class="main__info-likes">点赞 {{article.likes_count}}</span>
+          <span class="main__info-likes">点赞 {{article.like_count}}</span>
         </section>
         <div class="main__content">
           在以往的文章中少数派向大家介绍过 Magisk 的 安装方法、如何 隐藏 root 无痛玩机、这款神器以及在 Magisk 下实现 OTA 更新等等技巧，也推荐过不少实用的 Magisk 模块。
@@ -32,18 +33,33 @@
           需要明确的是，我们在 Magisk 的介绍中已经多次强调
         </div>
       </article>
-      <aside class="aside">
+      <aside v-if="isShowAside" class="aside" :style="{left: asideLeft + 'px'}">
         <div class="aside__item like">
-          <i class="icon iconheart" />
+          <i
+            class="icon"
+            :class="isLike ? 'iconheart-fill' : 'iconheart'"
+            @click="handleLikeClick"
+          />
         </div>
-        <span class="like-count">{{article.likes_count || 0}}</span>
-        <i class="icon iconcomment" />
-        <span class="comment-count">{{comment.total || 0}}</span>
-        <i class="icon iconstar" />
-        <i class="icon iconshare" />
+        <span class="like-count">{{article.like_count || 0}}</span>
+        <a style="text-decoration: none; color: inherit" href="#comment">
+          <i class="icon iconcomment" />
+        </a>
+        <span class="comment-count">{{comments ? comments.length : 0}}</span>
+        <i class="icon" :class="isStar ? 'iconstar-fill' : 'iconstar'" @click="handleStarClick" />
+        <el-popover
+          style="margin-top: 20px"
+          placement="top-start"
+          title="扫码分享"
+          width="150"
+          trigger="hover"
+        >
+          <img style="width: 100%" :src="qrcode" alt="二维码" />
+          <i class="icon iconshare" @mouseenter="getQrcodeMouseenter" slot="reference" />
+        </el-popover>
       </aside>
     </div>
-    <Comment :comment="comment" />
+    <Comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
   </div>
 </template>
 
@@ -52,7 +68,9 @@ import AppBar from "@/components/AppBar";
 import Comment from "@/components/Comment";
 import md from "markdown-it";
 import Dayjs from "dayjs";
-import { queryArticle, queryArticleComment } from "@/api/article";
+import { Message } from "element-ui";
+import jrQrcode from "jr-qrcode";
+import { queryArticle, queryArticleComment, like, star } from "@/api/article";
 
 export default {
   components: {
@@ -70,7 +88,12 @@ export default {
     return {
       opacity: 0,
       article: {},
-      comment: {}
+      comments: [],
+      qrcode: "",
+      isLike: false,
+      isStar: false,
+      asideLeft: 0,
+      isShowAside: true
     };
   },
 
@@ -80,6 +103,67 @@ export default {
         document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
       else this.opacity = 1;
+    },
+
+    handleLikeClick() {
+      let inc = 1;
+      const {
+        isLike,
+        article: { _id, like_count }
+      } = this;
+      if (!_id) return;
+
+      if (isLike) inc = -1;
+      this.isLike = !isLike;
+      this.$set(this.article, "like_count", like_count + inc);
+
+      like(_id, inc)
+        .then(res => {
+          console.log(res);
+          Message.success({ message: inc === 1 ? "已点赞!" : "已取消点赞!" });
+        })
+        .catch(() => {
+          Message.error({ message: "操作失败!" });
+        });
+    },
+
+    handleStarClick() {
+      let method = "add";
+      const {
+        isStar,
+        article: { _id }
+      } = this;
+      if (!_id) return;
+
+      if (isStar) method = "remove";
+      this.isStar = !isStar;
+
+      star(_id, method)
+        .then(res => {
+          Message.success({
+            message: method === "add" ? "已收藏!" : "已取消收藏!"
+          });
+        })
+        .catch(() => {
+          Message.error({ message: "操作失败!" });
+        });
+    },
+
+    getQrcodeMouseenter() {
+      this.qrcode = jrQrcode.getQrBase64(window.location.href, {
+        correctLevel: 3
+      });
+    },
+
+    changeWindowSize() {
+      if (this.asideLeft < 20 && this.asideLeft > 0) {
+        // this.isShowAside = false;
+        this.asideLeft = 20;
+      } else {
+        this.isShowAside = true;
+        this.asideLeft =
+          document.getElementById("article").getBoundingClientRect().left - 200;
+      }
     }
   },
 
@@ -91,22 +175,28 @@ export default {
 
   mounted() {
     const id = window.location.pathname.split("/")[2];
+    window.addEventListener("scroll", this.changeFadeAppbar);
+    window.addEventListener("resize", this.changeWindowSize);
+    this.changeWindowSize();
+
     queryArticle(id).then(({ data }) => {
       this.article = data;
+      this.isLike = data.isLike;
+      this.isStar = data.isStar;
     });
 
     queryArticleComment(id).then(({ data }) => {
-      this.comment = data;
+      this.comments = data;
     });
 
     this.$nextTick(() => {
-      window.addEventListener("scroll", this.changeFadeAppbar);
       var result = md().render("# markdown-it rulezz!");
     });
   },
 
   destroyed() {
     window.removeEventListener("scroll", this.changeFadeAppbar);
+    window.removeEventListener("resize", this.changeWindowSize);
   }
 };
 </script>
@@ -126,17 +216,23 @@ export default {
     display: flex;
     justify-content: center;
     margin-top: 250px;
+    padding: 0 10px;
     background-color: #fff;
   }
 
   .main {
     order: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     max-width: 664px;
+    min-width: 360px;
 
     &__cover {
-      width: 700px;
+      max-width: 700px;
+      min-width: 360px;
       height: 350px;
-      margin-top: -240px;
+      margin: -240px 10px 0 10px;
       overflow: hidden;
     }
 
@@ -166,14 +262,13 @@ export default {
     flex-direction: column;
     align-items: center;
     position: fixed;
-    left: 200px;
     font-size: 14px;
     color: #8e8787;
 
     .icon {
       font-size: 28px;
       cursor: pointer;
-      transition: color 0.3s;
+      transition: color 0.2s;
 
       &:hover {
         color: var(--color-primary);
@@ -203,11 +298,30 @@ export default {
       margin-top: 20px;
     }
 
+    @keyframes active {
+      75% {
+        transform: scale(1.3);
+      }
+      100% {
+        transform: scale(0.9);
+      }
+    }
+
     .comment,
     .iconshare,
+    .iconstar-fill,
     .iconstar {
       margin-top: 20px;
     }
+    .iconheart-fill,
+    .iconstar-fill {
+      animation: active 0.2s;
+      color: var(--color-primary);
+    }
+  }
+
+  .comment {
+    padding: 0 10px;
   }
 }
 </style>

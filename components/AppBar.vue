@@ -45,6 +45,13 @@
 import { mapState, mapMutations } from "vuex";
 import { MessageBox } from "element-ui";
 export default {
+  props: {
+    isDark: {
+      type: Boolean,
+      default: false
+    }
+  },
+
   data() {
     return {};
   },
@@ -71,11 +78,7 @@ export default {
   },
 
   computed: {
-    ...mapState("user", ["token", "user"]),
-
-    isDark() {
-      return window.location.pathname !== "/home";
-    }
+    ...mapState("user", ["token", "user"])
   }
 };
 </script>

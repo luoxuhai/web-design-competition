@@ -18,6 +18,8 @@ import {
     Divider,
     Backtop,
     Input,
+    Popover,
+    Tooltip,
     Avatar
 } from 'element-ui';
 import avatar from 'vue-avatar';
@@ -34,6 +36,8 @@ Vue.use(Button)
     .use(Backtop)
     .use(Input)
     .use(Avatar)
+    .use(Tooltip)
+    .use(Popover)
     .use(DropdownMenu);
 
 Vue.use(GeminiScrollbar);
