@@ -76,11 +76,21 @@ module.exports = {
         base: '/',
         pageTransition: {
             type: 'slide',
-            transitionClass: 'slide'
-        }
+            transitionClass: 'slide',
+            slideRightClass: 'slide-right',
+            alwaysBackPages: ['home']
+        },
+        routes: [
+            {
+                pattern: '/home',
+                meta: {
+                    keepAlive: true
+                }
+            }
+        ]
     },
     middleware: {
-        client: ['redirectToHome', 'preventToComment'],
+        client: ['redirectToHome', 'preventToComment']
     },
     serviceWorker: {
         // If true, generate service-worker.js and sw-register.js

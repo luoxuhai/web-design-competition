@@ -30,6 +30,7 @@
     "lavas-core-vue": "^1.1.11",
     "localforage": "^1.7.3",
     "markdown-it": "^10.0.0",
+    "scrollreveal": "^4.0.5",
     "socket.io-client": "^2.3.0",
     "stoppable": "^1.0.4",
     "uuid": "^3.3.3",

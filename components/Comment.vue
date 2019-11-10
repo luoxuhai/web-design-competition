@@ -126,6 +126,17 @@ export default {
     newComments() {
       return this.comments;
     }
+  },
+
+  updated() {
+    this.$nextTick(() => {
+      this.$scrollReveal.reveal(".comment__item");
+      this.$scrollReveal.reveal(".comment__input-wrapper");
+    });
+  },
+
+  destroyed() {
+    this.$scrollReveal.destroy();
   }
 };
 </script>

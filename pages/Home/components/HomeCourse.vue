@@ -86,7 +86,6 @@ export default {
 
     handleToCourseClick(e) {
       if (e.target.tagName === "LI") {
-        window.removeEventListener("resize", this.changeResize);
         this.$router.push({
           path: `/course/${e.target.dataset.id}`
         });
@@ -136,6 +135,10 @@ export default {
         maxScrollX = this.courseScroll.maxScrollX;
       });
     });
+  },
+
+  destroyed() {
+    window.removeEventListener("resize", this.changeResize);
   }
 };
 </script>
@@ -193,7 +196,7 @@ export default {
   &__wrapper {
     display: inline-flex;
     align-items: center;
-    height: 460px;
+    height: 440px;
   }
 
   &__learning {
@@ -249,9 +252,9 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     flex-shrink: 0;
-    width: 200px;
-    height: 380px;
-    margin-right: 50px;
+    width: 180px;
+    height: 320px;
+    margin-right: 40px;
     padding: 20px 15px;
     border-radius: 10px;
     background-color: #fff;

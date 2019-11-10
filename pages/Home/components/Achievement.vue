@@ -1,13 +1,18 @@
 <template>
   <div class="achievement">
     <ul class="achievement__list">
-      <li class="achievement__list-item achievement__list-header">
+      <li class="achievement__item achievement__list-header">
         <h2 class="header__title">厉害了，我的国！</h2>
         <hr class="divider" />
         <small class="header__sub">党的十八大以来中国的发展和成就，以及十九大报告中习近平总书记提出的中国特色社会主义进入新时代这一重大论述。</small>
       </li>
-      <li class="achievement__list-item hvr-bob" v-for="item of articles" :key="item._id">
-        <router-link class="achievement__list-content" :to="{path: `/article/${item._id}`}">
+      <li
+        class="achievement__item hvr-bob"
+        :style="{backgroundImage: `url(${item.cover})`}"
+        v-for="item of articles"
+        :key="item._id"
+      >
+        <router-link class="achievement__item-content" :to="{path: `/article/${item._id}`}">
           <h2 class="achievement__item-title">{{item.title}}</h2>
           <div>
             <small class="achievement__item-sub">{{item.desc}}</small>
@@ -22,11 +27,21 @@
 export default {
   props: {
     articles: Array
+  },
+
+  updated() {
+    this.$nextTick(() => this.$scrollReveal.reveal(".achievement__item"));
+  },
+
+  destroyed() {
+    this.$scrollReveal.destroy();
   }
 };
 </script>
 
 <style lang='scss' scoped>
+@import "@/assets/scss/_mixins.scss";
+
 .achievement {
   display: flex;
   justify-content: center;
@@ -66,21 +81,33 @@ export default {
       }
     }
 
-    &-item {
+    &::after {
+      content: "";
       width: 360px;
-      height: 230px;
-      margin-bottom: 40px;
-      background: rgba(103, 213, 181, 1);
-      transition: all 0.2s;
+    }
+  }
 
-      &:not(:first-child):hover {
-        box-shadow: 0 4px 12px 0 rgba(103, 213, 181, 1);
-        // transform: scale(1.1)
-      }
+  &__item {
+    width: 360px;
+    height: 230px;
+    margin-bottom: 40px;
+    background: rgba(103, 213, 181, 1);
+    transition: all 0.2s;
+    background-position: 50%;
+    background-size: 90%;
+    background-repeat: no-repeat;
 
-      &:first-child {
-        background: #fff;
-      }
+    &:not(:first-child):hover {
+      box-shadow: 0 4px 12px 0 rgba(103, 213, 181, 1);
+      // transform: scale(1.1)
+    }
+
+    &:first-child {
+      background: #fff;
+    }
+
+    &-sub {
+      @include ellipsis(3);
     }
 
     &-content {
@@ -91,11 +118,8 @@ export default {
       height: inherit;
       padding: 18px;
       box-sizing: border-box;
-    }
-
-    &::after {
-      content: "";
-      width: 360px;
+      text-decoration: none;
+      color: inherit;
     }
   }
 }
