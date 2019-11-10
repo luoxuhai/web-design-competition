@@ -84,10 +84,16 @@ export default {
         const barrage = {
           duration: 15000,
           id: uuidv4(),
-          start: player.currentTime * 1000 + 800,
+          start: player.currentTime * 1000 + 500,
           txt: this.barrage
         };
-        player.danmu.sendComment(barrage);
+        player.danmu.sendComment({
+          ...barrage,
+          style: {
+            color: "#ff9500",
+            fontSize: "24px"
+          }
+        });
 
         addBarrage({ courseId: id, barrage });
       } else this.barrage = "";
