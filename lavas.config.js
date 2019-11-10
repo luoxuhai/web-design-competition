@@ -90,7 +90,7 @@ module.exports = {
         ]
     },
     middleware: {
-        client: ['redirectToHome', 'preventToComment']
+        client: ['redirectToHome', 'preventToComponent', 'changeTitle']
     },
     serviceWorker: {
         // If true, generate service-worker.js and sw-register.js

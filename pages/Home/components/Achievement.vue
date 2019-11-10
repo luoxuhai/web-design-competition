@@ -12,7 +12,10 @@
         v-for="item of articles"
         :key="item._id"
       >
-        <router-link class="achievement__item-content" :to="{path: `/article/${item._id}`}">
+        <router-link
+          class="achievement__item-content"
+          :to="{path: `/article/${item._id}`, query: {title: item.title}}"
+        >
           <h2 class="achievement__item-title">{{item.title}}</h2>
           <div>
             <small class="achievement__item-sub">{{item.desc}}</small>

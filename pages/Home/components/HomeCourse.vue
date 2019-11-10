@@ -4,9 +4,11 @@
       <ul class="course__wrapper">
         <li
           class="course__item hvr-bob hvr-ripple-out"
+          :style="{ backgroundImage: `url('https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/course-${index}.svg')`}"
           v-for="(item, index) of courses"
           :key="index"
           :data-id="item._id"
+          :data-title="item.title"
         >
           <div class="course__learning">
             <ul class="course__learning-list">
@@ -27,7 +29,7 @@
           </div>
           <section>
             <h2 class="course__title">
-              <router-link :to="{path: '/course/114'}">{{item.title}}</router-link>
+              <router-link :to="{path: '/course/114', query: {title: item.title}}">{{item.title}}</router-link>
             </h2>
             <hr class="divider" />
             <div class="course__author">
@@ -87,7 +89,8 @@ export default {
     handleToCourseClick(e) {
       if (e.target.tagName === "LI") {
         this.$router.push({
-          path: `/course/${e.target.dataset.id}`
+          path: `/course/${e.target.dataset.id}`,
+          query: { title: e.target.dataset.title }
         });
       }
     },
@@ -221,7 +224,6 @@ export default {
   &__title {
     font-size: 29px;
     font-weight: bold;
-    line-height: 38px;
 
     a {
       text-decoration: none;
@@ -252,13 +254,16 @@ export default {
     flex-direction: column;
     justify-content: space-between;
     flex-shrink: 0;
-    width: 180px;
-    height: 320px;
+    width: 200px;
+    height: 360px;
     margin-right: 40px;
     padding: 20px 15px;
     border-radius: 10px;
     background-color: #fff;
     cursor: pointer;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position-y: 35%;
 
     &:first-child {
       margin-left: 10px;
