@@ -56,6 +56,7 @@
 import { mapState, mapMutations } from 'vuex';
 import { MessageBox, Message, Loading } from 'element-ui';
 import UserDialog from './UserDialog';
+
 export default {
   components: {
     UserDialog
@@ -92,14 +93,20 @@ export default {
 
     handleLoginClick() {
       localStorage.setItem('isLogin', '1');
+      const loadingInstance = Loading.service({
+        lock: true,
+        text: '登录中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      });
+
+      window.addEventListener('beforeunload', () => {
+        loadingInstance.close();
+         localStorage.setItem('isLogin', '0');
+      });
+
       setInterval(() => {
         if (localStorage.getItem('isLogin') === '0') {
-          Loading.service({
-            lock: true,
-            text: '登录中',
-            spinner: 'el-icon-loading',
-            background: 'rgba(0, 0, 0, 0.7)'
-          });
           location.reload();
         }
       }, 100);
