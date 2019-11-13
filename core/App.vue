@@ -14,7 +14,13 @@
         ></router-view>
       </keep-alive>
     </transition>
-    <div class="footer"></div>
+    <div class="footer">
+      <p>
+        Copyright
+        <Icon type="copyright" />2019 - present
+        <mark>HBF</mark> All Rights Reserved
+      </p>
+    </div>
     <update-toast></update-toast>
     <el-backtop style="width: 50px; height: 50px;">
       <i style="font-size: 30px" class="el-icon-caret-top" />
@@ -180,9 +186,13 @@ export default {
   color: #2c3e50;
 
   .footer {
-    height: 150px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
     margin-top: auto;
-    background-color: #f00;
+    background-color: #f4f4f4;
+    color: rgb(153, 153, 153);
   }
 }
 

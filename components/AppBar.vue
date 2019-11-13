@@ -36,15 +36,16 @@
             :style="{ color: isDark ? '#333' : '#f5f5f5' }"
             class="user__name"
           >{{ user.nickname }}</h3>
-          <el-button
-            v-else
-            :style="{ backgroundColor: isDark ? '' : '#7200da' }"
-            class="login-button"
-            @click="handleLoginClick"
-            size="medium"
-            type="primary"
-            round
-          >登 录</el-button>
+          <el-tooltip v-else effect="dark" content="QQ登录" placement="left-start">
+            <el-button
+              :style="{ backgroundColor: isDark ? '' : '#7200da' }"
+              class="login-button"
+              @click="handleLoginClick"
+              size="medium"
+              type="primary"
+              round
+            >登 录</el-button>
+          </el-tooltip>
         </li>
       </ul>
     </nav>
@@ -102,7 +103,7 @@ export default {
 
       window.addEventListener('beforeunload', () => {
         loadingInstance.close();
-         localStorage.setItem('isLogin', '0');
+        localStorage.setItem('isLogin', '0');
       });
 
       setInterval(() => {
