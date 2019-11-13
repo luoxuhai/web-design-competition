@@ -2,6 +2,8 @@ import request from '@/utils/request';
 
 export const queryArticles = () => request('/v1/articles');
 
+export const queryStars = () => request('/v1/articles/stars');
+
 export const queryArticle = id => request(`/v1/articles/${id}`);
 
 export const like = (id, inc) =>

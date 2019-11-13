@@ -34,17 +34,14 @@
 </template>
 
 <script>
-import XgPlayer from "xgplayer";
-import uuidv4 from "uuid/v4";
-import { Message } from "element-ui";
-import SectionTitle from "@/components/SectionTitle";
-import ChatRoom from "./components/ChatRoom";
-import {
-  queryCourse,
-  addLearner,
-  addBarrage,
-  queryBarrage
-} from "@/api/course";
+import { mapState, mapMutations } from 'vuex';
+import XgPlayer from 'xgplayer';
+import uuidv4 from 'uuid/v4';
+import { Message } from 'element-ui';
+import SectionTitle from '@/components/SectionTitle';
+import ChatRoom from './components/ChatRoom';
+import { checkToken } from '@/utils/utils';
+import { queryCourse, addLearner, addBarrage, queryBarrage } from '@/api/course';
 
 let barrageInterval = null;
 
@@ -56,29 +53,30 @@ export default {
 
   data() {
     return {
-      id: "",
+      id: '',
       opacity: 0,
       course: {},
-      barrage: ""
+      barrage: ''
     };
   },
 
   methods: {
     changeFadeAppbar() {
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
       else this.opacity = 1;
     },
 
     validateInputValue(content) {
-      if (content.replace(/(^\s*)|(\s*$)/g, "").length === 0) {
-        Message.error({ message: "内容不能为空!" });
+      if (content.replace(/(^\s*)|(\s*$)/g, '').length === 0) {
+        Message.error({ message: '内容不能为空!' });
         return false;
       } else return true;
     },
 
     handleSendBarrageClick() {
+      if (!checkToken(this.token)) return;
+
       const { validateInputValue, player, id } = this;
       if (validateInputValue(this.barrage)) {
         const barrage = {
@@ -90,31 +88,33 @@ export default {
         player.danmu.sendComment({
           ...barrage,
           style: {
-            color: "#ff9500",
-            fontSize: "24px"
+            color: '#ff9500',
+            fontSize: '24px'
           }
         });
 
         addBarrage({ courseId: id, barrage });
-      } else this.barrage = "";
+      } else this.barrage = '';
     }
   },
 
   computed: {
+    ...mapState('user', ['token']),
+
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
     }
   },
 
   mounted() {
-    this.id = window.location.pathname.split("/")[2];
-    window.addEventListener("scroll", this.changeFadeAppbar);
+    this.id = window.location.pathname.split('/')[2];
+    window.addEventListener('scroll', this.changeFadeAppbar);
 
     this.player = new XgPlayer({
-      id: "player",
-      poster: "https://element.eleme.cn/static/theme-index-red.c8e136e.png",
+      id: 'player',
+      poster: 'https://element.eleme.cn/static/theme-index-red.c8e136e.png',
       playsinline: true,
-      whitelist: [""],
+      whitelist: [''],
       playbackRate: [0.5, 1, 1.5, 2],
       defaultPlaybackRate: 1,
       rotate: {
@@ -140,9 +140,10 @@ export default {
       this.player.start(data.content);
     });
 
-    this.player.once("play", () => {
-      // 延时5秒加入课程
-      setTimeout(() => addLearner(this.id), 5000);
+    this.player.once('play', () => {
+      if (this.token)
+        // 延时5秒加入课程
+        setTimeout(() => addLearner(this.id), 5000);
 
       barrageInterval = setInterval(() => {
         // 获取弹幕
@@ -150,8 +151,8 @@ export default {
           this.player.danmu.bulletBtn.main.data = data.map(e => ({
             ...e,
             style: {
-              color: "#ff9500",
-              fontSize: "24px"
+              color: '#ff9500',
+              fontSize: '24px'
             }
           }));
         });
@@ -160,7 +161,7 @@ export default {
   },
 
   destroyed() {
-    window.removeEventListener("scroll", this.changeFadeAppbar);
+    window.removeEventListener('scroll', this.changeFadeAppbar);
     clearInterval(barrageInterval);
   }
 };
@@ -168,7 +169,7 @@ export default {
 
 <style lang='scss' scoped>
 .course {
-  height: 100vmax;
+  padding-bottom: 200px;
   background-color: #f4f4f4;
   .appbar {
     position: sticky;
@@ -192,13 +193,15 @@ export default {
       flex: 1;
       display: flex;
       flex-direction: column;
-      min-width: 400px;
+      min-width: 340px;
+      max-width: 600px;
       margin-bottom: 20px;
     }
 
     &-chat {
       flex: 1;
-      margin-left: 10%;
+      margin-left: 40px;
+      min-width: 400px;
     }
 
     #player {
@@ -214,6 +217,22 @@ export default {
 
   &__barrage-submit {
     margin-left: 10px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .course__wrapper-chat {
+    margin-left: 20px;
+  }
+}
+@media only screen and (max-width: 845px) {
+  .course__wrapper-chat {
+    margin-left: 0;
+    min-width: 100%;
+  }
+
+  .course__wrapper {
+    margin-top: 0;
   }
 }
 </style>

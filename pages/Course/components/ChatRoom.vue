@@ -58,7 +58,6 @@ export default {
   flex-direction: column;
   justify-content: space-between;
   flex: 1;
-  max-width: 700px;
   height: 70vh;
   padding: 10px;
   background-color: #5b81a6;

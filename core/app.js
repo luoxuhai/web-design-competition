@@ -20,7 +20,9 @@ import {
     Input,
     Popover,
     Tooltip,
-    Avatar
+    Avatar,
+    Dialog,
+    Image,
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import GeminiScrollbar from 'vue-gemini-scrollbar';
@@ -58,6 +60,8 @@ Vue.use(Button)
     .use(Avatar)
     .use(Tooltip)
     .use(Popover)
+    .use(Dialog)
+    .use(Image)
     .use(DropdownMenu);
 
 Vue.use(GeminiScrollbar);

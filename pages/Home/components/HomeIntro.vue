@@ -43,6 +43,25 @@ export default {
 <style lang='scss' scoped>
 @import "@/assets/scss/_mixins.scss";
 
+@media screen and (max-width: 800px) {
+  .intro__button {
+    left: 0 !important;
+  }
+
+  .intro__toplearn {
+    display: none;
+  }
+
+  .intro__title {
+    -webkit-text-fill-color: var(--color-primary) !important;
+  }
+}
+@media screen and (max-width: 560px) {
+  .intro__title {
+    width: auto !important;
+  }
+}
+
 .hvr-ripple-out:before {
   content: "";
   border: #7200da solid 6px;
@@ -50,7 +69,10 @@ export default {
 }
 .intro {
   width: 32%;
+  min-width: 300px;
   padding-top: 120px;
+  padding-left: 10px;
+  background-color: #fff;
 
   &__wrapper {
     width: 300px;

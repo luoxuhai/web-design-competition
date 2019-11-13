@@ -10,23 +10,7 @@
           :data-id="item._id"
           :data-title="item.title"
         >
-          <div class="course__learning">
-            <ul class="course__learning-list">
-              <li class="course__learning-item" v-for="_item of item.learner" :key="_item._id">
-                <el-tooltip effect="dark" :content="_item.nickname" placement="top">
-                  <el-avatar
-                    class="intro__toplearn-avatar"
-                    :src="_item.avatar"
-                    @error="() => true"
-                    :size="30"
-                  >
-                    <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-                  </el-avatar>
-                </el-tooltip>
-              </li>
-            </ul>
-            {{item.learner.length}} 人学习中
-          </div>
+          <course-learner :learner="item.learner" :learner_count="item.learner_count" />
           <section>
             <h2 class="course__title">
               <router-link :to="{path: '/course/114', query: {title: item.title}}">{{item.title}}</router-link>
@@ -49,21 +33,32 @@
       <i class="icon iconleft" :class="!next && 'active'" />
       <i class="icon iconright" :class="next && 'active'" />
     </div>
+    <div class="course__bg"></div>
   </div>
 </template>
 
 <script>
-import BScroll from "@better-scroll/core";
-import mouseWheel from "@better-scroll/mouse-wheel";
-import ObserveDom from "@better-scroll/observe-dom";
+import BScroll from '@better-scroll/core';
+import mouseWheel from '@better-scroll/mouse-wheel';
+import ObserveDom from '@better-scroll/observe-dom';
+import CourseLearner from '@/components/CourseLearner';
 
 BScroll.use(mouseWheel).use(ObserveDom);
 
 let maxScrollX = 0;
 
 export default {
+  components: {
+    CourseLearner
+  },
+
   props: {
-    courses: Array
+    courses: {
+      type: Array,
+      default: Array(5).fill({
+        title: ''
+      })
+    }
   },
 
   data() {
@@ -77,8 +72,8 @@ export default {
     setScrollWidth() {
       this.scrollWidth =
         document.body.clientWidth -
-        document.getElementById("course-scroll").getBoundingClientRect().left +
-        "px";
+        document.getElementById('course-scroll').getBoundingClientRect().left +
+        'px';
     },
 
     changeResize() {
@@ -87,7 +82,7 @@ export default {
     },
 
     handleToCourseClick(e) {
-      if (e.target.tagName === "LI") {
+      if (e.target.tagName === 'LI') {
         this.$router.push({
           path: `/course/${e.target.dataset.id}`,
           query: { title: e.target.dataset.title }
@@ -97,9 +92,8 @@ export default {
 
     handleIndicatorClick(e) {
       const className = e.target.classList[1];
-      if (className === "iconleft") this.courseScroll.scrollTo(0, 0, 300);
-      else if (className === "iconright")
-        this.courseScroll.scrollTo(maxScrollX, 0, 300);
+      if (className === 'iconleft') this.courseScroll.scrollTo(0, 0, 300);
+      else if (className === 'iconright') this.courseScroll.scrollTo(maxScrollX, 0, 300);
       else return false;
     }
   },
@@ -111,9 +105,9 @@ export default {
   },
 
   mounted() {
-    window.addEventListener("resize", this.changeResize);
+    window.addEventListener('resize', this.changeResize);
     this.setScrollWidth();
-    this.courseScroll = new BScroll("#course-scroll", {
+    this.courseScroll = new BScroll('#course-scroll', {
       scrollX: true,
       click: true,
       bounceTime: 500,
@@ -130,44 +124,52 @@ export default {
     });
     this.$nextTick(() => {
       this.courseScroll.refresh();
-      this.courseScroll.on("scroll", e => {
+      this.courseScroll.on('scroll', e => {
         if (e.x <= this.courseScroll.maxScrollX / 2) this.next = false;
         else this.next = true;
       });
-      this.courseScroll.on("refresh", () => {
+      this.courseScroll.on('refresh', () => {
         maxScrollX = this.courseScroll.maxScrollX;
       });
     });
   },
 
   destroyed() {
-    window.removeEventListener("resize", this.changeResize);
+    window.removeEventListener('resize', this.changeResize);
   }
 };
 </script>
 
 <style lang='scss' scoped>
 .hvr-ripple-out:before {
-  content: "";
+  content: '';
   border: #ffffff solid 6px;
-  border-radius: 12px;
+  border-radius: 15px;
 }
 .course {
   flex: 1;
-  // background-color: var(--color-primary);
-  background-image: linear-gradient(
-    135deg,
-    var(--color-primary),
-    lighten(#f9320c, 20%) 100%
-  );
+  min-width: 470px;
+  background-image: linear-gradient(135deg, var(--color-primary), lighten(#f9320c, 20%) 100%);
   overflow: hidden;
   padding-top: 120px;
+
+  &__bg {
+    position: absolute;
+    top: 100px;
+    right: 500px;
+    width: 200px;
+    height: 200px;
+    // background-image: url("../../../static/img/undraw_video_influencer_9oyy (1).svg");
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0.5;
+  }
 
   &__indicator {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 240px;
+    width: 280px;
     margin-top: 50px;
     color: rgba(255, 255, 255, 0.5);
 
@@ -200,25 +202,6 @@ export default {
     display: inline-flex;
     align-items: center;
     height: 440px;
-  }
-
-  &__learning {
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-    color: rgba(0, 0, 0, 0.65);
-
-    &-list {
-      display: flex;
-      align-items: center;
-      margin-right: 10px;
-    }
-
-    &-item {
-      &:not(:first-child) {
-        margin-left: -8px;
-      }
-    }
   }
 
   &__title {
@@ -276,6 +259,47 @@ export default {
       border: none;
       background-color: #707070;
     }
+  }
+}
+
+@media screen and (max-width: 1200px) {
+  .course {
+    #course-scroll {
+      left: 200px;
+    }
+  }
+
+  .course__indicator {
+    width: 180px !important;
+  }
+}
+
+@media screen and (max-width: 776px) {
+  .course {
+    padding-top: 50px !important;
+    padding-bottom: 30px;
+  }
+
+  .course {
+    #course-scroll {
+      left: 0;
+      top: 0;
+    }
+  }
+
+  .course__indicator {
+    width: auto !important;
+    margin-top: 20px !important;
+
+    .icon:first-child {
+      margin-right: 60px !important;
+    }
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .course {
+    min-width: 300px !important;
   }
 }
 </style>

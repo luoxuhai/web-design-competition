@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="home">
     <app-bar
       :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
       class="appbar"
@@ -70,7 +70,10 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-.appbar {
+.home {
+  padding-bottom: 200px;
+
+  .appbar {
   position: fixed;
   left: 0;
   right: 0;
@@ -79,6 +82,8 @@ export default {
 .home__wrapper {
   display: flex;
   flex-wrap: wrap;
-  height: 800px;
+  min-height: 800px;
 }
+}
+
 </style>

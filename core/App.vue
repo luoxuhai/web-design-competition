@@ -14,6 +14,7 @@
         ></router-view>
       </keep-alive>
     </transition>
+    <div class="footer"></div>
     <update-toast></update-toast>
     <el-backtop style="width: 50px; height: 50px;">
       <i style="font-size: 30px" class="el-icon-caret-top" />
@@ -22,27 +23,27 @@
 </template>
 
 <script>
-import Vue from "vue";
-import { mapState, mapActions, mapMutations } from "vuex";
-import UpdateToast from "@/components/UpdateToast";
-import { Loading } from "element-ui";
-import { keepAlivePages } from "@/.lavas/router";
-import { login, update } from "@/api/user";
+import Vue from 'vue';
+import { mapState, mapActions, mapMutations } from 'vuex';
+import UpdateToast from '@/components/UpdateToast';
+import { Loading } from 'element-ui';
+import { keepAlivePages } from '@/.lavas/router';
+import { login, update } from '@/api/user';
 
-const ENABLE_SCROLL_CLASS = "app-view-scroll-enabled";
+const ENABLE_SCROLL_CLASS = 'app-view-scroll-enabled';
 
 export default {
-  name: "app",
+  name: 'app',
   components: {
     UpdateToast
   },
   computed: {
-    ...mapState("pageTransition", {
+    ...mapState('pageTransition', {
       pageTransitionType: state => state.type,
       pageTransitionEffect: state => state.effect
     }),
 
-    ...mapState("scrollBehavior", {
+    ...mapState('scrollBehavior', {
       scrollPostionMap: state => state.scrollPostionMap
     }),
 
@@ -55,7 +56,7 @@ export default {
       let { name, params } = this.$route;
       let paramKeys = Object.keys(params);
       if (paramKeys.length) {
-        return name + paramKeys.reduce((prev, cur) => prev + params[cur], "");
+        return name + paramKeys.reduce((prev, cur) => prev + params[cur], '');
       }
       return null;
     }
@@ -67,9 +68,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions("scrollBehavior", ["savePageScrollPosition"]),
+    ...mapActions('scrollBehavior', ['savePageScrollPosition']),
 
-    ...mapMutations("user", ["login"]),
+    ...mapMutations('user', ['login']),
 
     /**
      * make current page container scrollable,
@@ -105,8 +106,7 @@ export default {
 
     handleBeforeLeave(el) {
       let pageId = el.dataset.pageId;
-      let scrollTop =
-        document.body.scrollTop || document.documentElement.scrollTop;
+      let scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
       this.restoreContainerScrollPosition(el, scrollTop);
       // save current scroll position in a map
       this.savePageScrollPosition({
@@ -117,40 +117,40 @@ export default {
   },
   beforeCreate() {
     function setRootFontSize() {
-      const html = document.querySelector(":root");
+      const html = document.querySelector(':root');
       const fontSize = innerWidth / 40;
-      if (innerWidth <= 375) html.style.fontSize = "10px";
-      else html.style.fontSize = (fontSize > 16 ? 16 : fontSize) + "px";
+      if (innerWidth <= 375) html.style.fontSize = '10px';
+      else html.style.fontSize = (fontSize > 16 ? 16 : fontSize) + 'px';
     }
 
     setRootFontSize();
-    window.addEventListener("resize", () => {
+    window.addEventListener('resize', () => {
       setRootFontSize();
     });
   },
   mounted() {
     const data = {};
 
-    if (localStorage.getItem("isLogin") === "1") {
+    if (localStorage.getItem('isLogin') === '1') {
       Loading.service({
         lock: true,
-        text: "登录中",
-        spinner: "el-icon-loading",
-        background: "rgba(0, 0, 0, 0.7)"
+        text: '登录中',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
       });
     }
 
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         data.openId = openId;
-        if (localStorage.getItem("isLogin") === "1") {
-          localStorage.setItem("isLogin", "0");
-          window.open("", "_self");
+        if (localStorage.getItem('isLogin') === '1') {
+          localStorage.setItem('isLogin', '0');
+          window.open('', '_self');
           window.close();
           window.close();
         }
       });
-      QC.api("get_user_info", {})
+      QC.api('get_user_info', {})
         .success(({ data: { nickname, figureurl_2 } }) => {
           data.nickname = nickname;
           data.avatar = figureurl_2;
@@ -171,10 +171,19 @@ export default {
 
 <style lang="scss">
 #app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+
+  .footer {
+    height: 150px;
+    margin-top: auto;
+    background-color: #f00;
+  }
 }
 
 .scroll-bar {

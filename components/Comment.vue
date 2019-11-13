@@ -48,11 +48,12 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
-import Dayjs from "dayjs";
-import { Message, MessageBox } from "element-ui";
-import SectionTitle from "@/components/SectionTitle";
-import { comment, removeArticleComment } from "@/api/article";
+import { mapState } from 'vuex';
+import Dayjs from 'dayjs';
+import { Message, MessageBox } from 'element-ui';
+import SectionTitle from '@/components/SectionTitle';
+import { comment, removeArticleComment } from '@/api/article';
+import { checkToken } from '@/utils/utils';
 export default {
   components: {
     SectionTitle
@@ -65,26 +66,28 @@ export default {
 
   filters: {
     formatDate(date) {
-      return Dayjs(date).format("YYYY-MM-DD hh:mm");
+      return Dayjs(date).format('YYYY-MM-DD hh:mm');
     }
   },
 
   data() {
     return {
-      content: ""
+      content: ''
     };
   },
 
   methods: {
     validateInputValue(next) {
-      if (this.content.replace(/(^\s*)|(\s*$)/g, "").length === 0) {
-        Message.error({ message: "内容不能为空!" });
-        this.content = "";
+      if (this.content.replace(/(^\s*)|(\s*$)/g, '').length === 0) {
+        Message.error({ message: '内容不能为空!' });
+        this.content = '';
         return;
       } else next();
     },
 
     handleSubmitComment() {
+      if (!checkToken(this.token)) return;
+
       this.validateInputValue(this.submitComment);
     },
 
@@ -99,29 +102,29 @@ export default {
             user: this.user,
             content: content.trim()
           });
-          Message.success({ message: "评论成功!" });
+          Message.success({ message: '评论成功!' });
         })
-        .catch(() => Message.error({ message: "评论失败!" }));
+        .catch(() => Message.error({ message: '评论失败!' }));
     },
 
     handleDeleteCommentClick(commentId, index) {
-      MessageBox.confirm("确认删除?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      MessageBox.confirm('确认删除?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         removeArticleComment(this.articleId, commentId)
           .then(res => {
             this.newComments.splice(index, 1);
-            Message.success({ message: "已删除!" });
+            Message.success({ message: '已删除!' });
           })
-          .catch(() => Message.error({ message: "删除失败!" }));
+          .catch(() => Message.error({ message: '删除失败!' }));
       });
     }
   },
 
   computed: {
-    ...mapState("user", ["user"]),
+    ...mapState('user', ['user', 'token']),
 
     newComments() {
       return this.comments;
@@ -130,8 +133,8 @@ export default {
 
   updated() {
     this.$nextTick(() => {
-      this.$scrollReveal.reveal(".comment__item");
-      this.$scrollReveal.reveal(".comment__input-wrapper");
+      this.$scrollReveal.reveal('.comment__item');
+      this.$scrollReveal.reveal('.comment__input-wrapper');
     });
   },
 
@@ -142,7 +145,7 @@ export default {
 </script>
 
 <style lang='scss' scoped>
-@import "@/assets/scss/_mixins.scss";
+@import '@/assets/scss/_mixins.scss';
 
 .comment {
   max-width: 700px;

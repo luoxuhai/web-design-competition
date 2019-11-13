@@ -33,7 +33,7 @@
           需要明确的是，我们在 Magisk 的介绍中已经多次强调
         </div>
       </article>
-      <aside v-if="isShowAside" class="aside" :style="{left: asideLeft + 'px'}">
+      <aside v-if="isShowAside" class="aside">
         <div class="aside__item like">
           <i
             class="icon"
@@ -59,18 +59,20 @@
         </el-popover>
       </aside>
     </div>
-    <Comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
+    <comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
   </div>
 </template>
 
 <script>
-import AppBar from "@/components/AppBar";
-import Comment from "@/components/Comment";
-import md from "markdown-it";
-import Dayjs from "dayjs";
-import { Message } from "element-ui";
-import jrQrcode from "jr-qrcode";
-import { queryArticle, queryArticleComment, like, star } from "@/api/article";
+import { mapState, mapMutations } from 'vuex';
+import AppBar from '@/components/AppBar';
+import Comment from '@/components/Comment';
+import md from 'markdown-it';
+import Dayjs from 'dayjs';
+import { Message } from 'element-ui';
+import jrQrcode from 'jr-qrcode';
+import { queryArticle, queryArticleComment, like, star } from '@/api/article';
+import { checkToken } from '@/utils/utils';
 
 export default {
   components: {
@@ -80,7 +82,7 @@ export default {
 
   filters: {
     formatDate(date) {
-      return Dayjs(date).format("YYYY-MM-DD hh:mm");
+      return Dayjs(date).format('YYYY-MM-DD hh:mm');
     }
   },
 
@@ -89,23 +91,23 @@ export default {
       opacity: 0,
       article: {},
       comments: [],
-      qrcode: "",
+      qrcode: '',
       isLike: false,
       isStar: false,
-      asideLeft: 0,
       isShowAside: true
     };
   },
 
   methods: {
     changeFadeAppbar() {
-      const scrollTop =
-        document.documentElement.scrollTop || document.body.scrollTop;
+      const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
       else this.opacity = 1;
     },
 
     handleLikeClick() {
+      if (!checkToken(this.token)) return;
+
       let inc = 1;
       const {
         isLike,
@@ -115,37 +117,39 @@ export default {
 
       if (isLike) inc = -1;
       this.isLike = !isLike;
-      this.$set(this.article, "like_count", like_count + inc);
+      this.$set(this.article, 'like_count', like_count + inc);
 
       like(_id, inc)
         .then(res => {
           console.log(res);
-          Message.success({ message: inc === 1 ? "已点赞!" : "已取消点赞!" });
+          Message.success({ message: inc === 1 ? '已点赞!' : '已取消点赞!' });
         })
         .catch(() => {
-          Message.error({ message: "操作失败!" });
+          Message.error({ message: '操作失败!' });
         });
     },
 
     handleStarClick() {
-      let method = "add";
+      if (!checkToken(this.token)) return;
+
+      let method = 'add';
       const {
         isStar,
         article: { _id }
       } = this;
       if (!_id) return;
 
-      if (isStar) method = "remove";
+      if (isStar) method = 'remove';
       this.isStar = !isStar;
 
       star(_id, method)
         .then(res => {
           Message.success({
-            message: method === "add" ? "已收藏!" : "已取消收藏!"
+            message: method === 'add' ? '已收藏!' : '已取消收藏!'
           });
         })
         .catch(() => {
-          Message.error({ message: "操作失败!" });
+          Message.error({ message: '操作失败!' });
         });
     },
 
@@ -153,31 +157,20 @@ export default {
       this.qrcode = jrQrcode.getQrBase64(window.location.href, {
         correctLevel: 3
       });
-    },
-
-    changeWindowSize() {
-      if (this.asideLeft < 20 && this.asideLeft > 0) {
-        // this.isShowAside = false;
-        this.asideLeft = 20;
-      } else {
-        this.isShowAside = true;
-        this.asideLeft =
-          document.getElementById("article").getBoundingClientRect().left - 200;
-      }
     }
   },
 
   computed: {
+    ...mapState('user', ['token']),
+
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
     }
   },
 
   mounted() {
-    const id = window.location.pathname.split("/")[2];
-    window.addEventListener("scroll", this.changeFadeAppbar);
-    window.addEventListener("resize", this.changeWindowSize);
-    this.changeWindowSize();
+    const id = window.location.pathname.split('/')[2];
+    window.addEventListener('scroll', this.changeFadeAppbar);
 
     queryArticle(id).then(({ data }) => {
       this.article = data;
@@ -190,19 +183,19 @@ export default {
     });
 
     this.$nextTick(() => {
-      var result = md().render("# markdown-it rulezz!");
+      var result = md().render('# markdown-it rulezz!');
     });
   },
 
   destroyed() {
-    window.removeEventListener("scroll", this.changeFadeAppbar);
-    window.removeEventListener("resize", this.changeWindowSize);
+    window.removeEventListener('scroll', this.changeFadeAppbar);
+    window.removeEventListener('resize', this.changeWindowSize);
   }
 };
 </script>
 
 <style lang='scss' scoped>
-@import "@/assets/scss/_mixins.scss";
+@import '@/assets/scss/_mixins.scss';
 
 .appbar {
   position: sticky;
@@ -210,6 +203,7 @@ export default {
   top: 0;
 }
 .article {
+  padding-bottom: 200px;
   background-color: #f4f4f4;
 
   &__wrapper {
@@ -226,14 +220,14 @@ export default {
     flex-direction: column;
     align-items: center;
     max-width: 664px;
-    min-width: 360px;
+    min-width: 330px;
 
     &__cover {
       max-width: 700px;
-      min-width: 360px;
-      height: 350px;
+      width: 100%;
+      height: auto;
+      max-height: 350px;
       margin: -240px 10px 0 10px;
-      overflow: hidden;
     }
 
     &__title {
@@ -262,6 +256,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: fixed;
+    left: 150px;
     font-size: 14px;
     color: #8e8787;
 
@@ -322,6 +317,18 @@ export default {
 
   .comment {
     padding: 0 10px;
+  }
+}
+
+@media only screen and (max-width: 1200px) {
+  .article .aside {
+    left: 20px;
+  }
+}
+
+@media only screen and (max-width: 850px) {
+  .article .aside {
+    display: none;
   }
 }
 </style>

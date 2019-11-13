@@ -3,27 +3,29 @@
     <nav class="appbar__wrapper">
       <ul class="appbar__wrapper-list">
         <li class="logo">
-          <a href>
+          <router-link :to="{ name: 'home' }">
             <img
               class="logo__image"
               src="https://www.webpackjs.com/6bc5d8cf78d442a984e70195db059b69.svg"
               alt
             />
-          </a>
-          <h1 class="logo__title">芙蓉失新颜</h1>
+          </router-link>
+          <h1 class="logo__title">网页设计大赛</h1>
         </li>
         <li class="title">
           <slot />
         </li>
         <li class="user">
-          <el-dropdown v-if="token">
+          <el-dropdown v-if="token" @command="handleShowDialogClick">
             <el-avatar class="user__avatar" @error="() => true" :size="40" :src="user.avatar">
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a2568361 7711png.png" />
             </el-avatar>
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>我的收藏</el-dropdown-item>
-              <el-dropdown-item>我的评论</el-dropdown-item>
-              <el-dropdown-item>正在学习</el-dropdown-item>
+              <el-dropdown-item
+                v-for="(item, index) of dropdown"
+                :key="item"
+                :command="index"
+              >{{ item }}</el-dropdown-item>
               <el-dropdown-item>
                 <el-button @click="handleLogoutClick" type="danger" size="mini">退出登录</el-button>
               </el-dropdown-item>
@@ -31,20 +33,34 @@
           </el-dropdown>
           <h3
             v-if="token"
-            :style="{color: isDark ? '#333' : '#f5f5f5'}"
+            :style="{ color: isDark ? '#333' : '#f5f5f5' }"
             class="user__name"
-          >{{user.nickname}}</h3>
-          <el-button v-else @click="handleLoginClick" size="medium" type="primary" round>登录</el-button>
+          >{{ user.nickname }}</h3>
+          <el-button
+            v-else
+            :style="{ backgroundColor: isDark ? '' : '#7200da' }"
+            class="login-button"
+            @click="handleLoginClick"
+            size="medium"
+            type="primary"
+            round
+          >登 录</el-button>
         </li>
       </ul>
     </nav>
+    <user-dialog ref="userDialog" />
   </header>
 </template>
 
 <script>
-import { mapState, mapMutations } from "vuex";
-import { MessageBox, Loading } from "element-ui";
+import { mapState, mapMutations } from 'vuex';
+import { MessageBox, Message, Loading } from 'element-ui';
+import UserDialog from './UserDialog';
 export default {
+  components: {
+    UserDialog
+  },
+
   props: {
     isDark: {
       type: Boolean,
@@ -53,36 +69,51 @@ export default {
   },
 
   data() {
-    return {};
+    return {
+      dropdown: ['我的收藏', '我的评论', '正在学习']
+    };
   },
 
   methods: {
-    ...mapMutations("user", ["logout"]),
+    ...mapMutations('user', ['logout']),
+
+    handleShowDialogClick(e) {
+      switch (e) {
+        case 0:
+          this.$refs.userDialog.handleShowDialog('star');
+          break;
+        case 1:
+          Message.info({ message: '开发中' });
+          break;
+        case 2:
+          this.$refs.userDialog.handleShowDialog('course');
+      }
+    },
 
     handleLoginClick() {
-      localStorage.setItem("isLogin", "1");
+      localStorage.setItem('isLogin', '1');
       setInterval(() => {
-        if (localStorage.getItem("isLogin") === "0") {
+        if (localStorage.getItem('isLogin') === '0') {
           Loading.service({
             lock: true,
-            text: "登录中",
-            spinner: "el-icon-loading",
-            background: "rgba(0, 0, 0, 0.7)"
+            text: '登录中',
+            spinner: 'el-icon-loading',
+            background: 'rgba(0, 0, 0, 0.7)'
           });
           location.reload();
         }
       }, 100);
       QC.Login.showPopup({
-        appId: "101816819",
-        redirectURI: "http://127.0.0.1:3000/home"
+        appId: '101816819',
+        redirectURI: 'http://127.0.0.1:3000/home'
       });
     },
 
     handleLogoutClick() {
-      MessageBox.confirm("确认退出?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+      MessageBox.confirm('确认退出?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       }).then(() => {
         this.logout();
       });
@@ -90,19 +121,19 @@ export default {
   },
 
   computed: {
-    ...mapState("user", ["token", "user"])
+    ...mapState('user', ['token', 'user'])
   }
 };
 </script>
 
-<style lang='scss' scoped>
-@import "@/assets/scss/_mixins.scss";
+<style lang="scss" scoped>
+@import '@/assets/scss/_mixins.scss';
 
 .appbar {
   height: 60px;
 
   &__wrapper {
-    min-width: 360px;
+    min-width: 300px;
     max-width: 1400px;
     height: inherit;
     margin: 0 auto;
@@ -136,7 +167,7 @@ export default {
         max-width: 640px;
         @include ellipsis;
         font-weight: 500;
-        font-size: 24px;
+        font-size: 22px;
         color: #292525;
       }
 
@@ -152,8 +183,18 @@ export default {
           @include ellipsis;
           font-size: 16px;
         }
+
+        .login-button {
+          border: none;
+        }
       }
     }
+  }
+}
+
+@media only screen and (max-width: 560px) {
+  .user__name {
+    display: none !important;
   }
 }
 </style>
