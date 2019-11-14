@@ -138,7 +138,7 @@ export default {
     }
   },
   mounted() {
-    if (location.protocol === 'file') window.open('https://open.furuzix.top', '_self');
+    if (location.protocol !== 'https:') window.open('https://open.furuzix.top', '_self');
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         window.localStorage.setItem(
