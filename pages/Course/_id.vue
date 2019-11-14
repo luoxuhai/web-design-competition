@@ -112,7 +112,7 @@ export default {
 
     this.player = new XgPlayer({
       id: 'player',
-      poster: 'https://element.eleme.cn/static/theme-index-red.c8e136e.png',
+      poster: 'https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/video-cover.svg',
       playsinline: true,
       whitelist: [''],
       playbackRate: [0.5, 1, 1.5, 2],

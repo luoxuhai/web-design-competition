@@ -3,14 +3,16 @@
     <nav class="appbar__wrapper">
       <ul class="appbar__wrapper-list">
         <li class="logo">
-          <router-link :to="{ name: 'home' }">
-            <img
-              class="logo__image"
-              src="https://www.webpackjs.com/6bc5d8cf78d442a984e70195db059b69.svg"
-              alt
-            />
-          </router-link>
-          <h1 class="logo__title">网页设计大赛</h1>
+          <el-tooltip effect="dark" content="大国之窗">
+            <router-link :to="{ name: 'home' }">
+              <img
+                class="logo__image"
+                src="../static/img/icons/android-chrome-512x512.png"
+                alt="大国之窗logo"
+              />
+            </router-link>
+          </el-tooltip>
+          <h1 class="logo__title">大国之窗</h1>
         </li>
         <li class="title">
           <slot />
@@ -93,8 +95,8 @@ export default {
     },
 
     handleLoginClick() {
-      localStorage.setItem('isLogin', '1');
-      const loadingInstance = Loading.service({
+      let loginInterval = null;
+      window.loadingInstance = Loading.service({
         lock: true,
         text: '登录中',
         spinner: 'el-icon-loading',
@@ -102,18 +104,27 @@ export default {
       });
 
       window.addEventListener('beforeunload', () => {
-        loadingInstance.close();
+        window.loadingInstance.close();
         localStorage.setItem('isLogin', '0');
       });
 
-      setInterval(() => {
-        if (localStorage.getItem('isLogin') === '0') {
+      loginInterval = setInterval(() => {
+        if (
+          !document.hidden &&
+          localStorage.getItem('openid') &&
+          localStorage.getItem('access_token')
+        ) {
+          clearInterval(loginInterval);
           location.reload();
         }
       }, 100);
+
       QC.Login.showPopup({
         appId: '101816819',
-        redirectURI: 'http://127.0.0.1:3000/home'
+        redirectURI:
+          process.env.NODE_ENV === 'development'
+            ? 'http://127.0.0.1:3000/home'
+            : 'https://open.furuzix.top/home'
       });
     },
 

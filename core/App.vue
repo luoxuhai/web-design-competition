@@ -119,58 +119,46 @@ export default {
         pageId,
         scrollPosition: { y: scrollTop }
       });
-    }
-  },
-  beforeCreate() {
-    function setRootFontSize() {
-      const html = document.querySelector(':root');
-      const fontSize = innerWidth / 40;
-      if (innerWidth <= 375) html.style.fontSize = '10px';
-      else html.style.fontSize = (fontSize > 16 ? 16 : fontSize) + 'px';
-    }
+    },
 
-    setRootFontSize();
-    window.addEventListener('resize', () => {
-      setRootFontSize();
-    });
+    handleLogin() {
+      if (localStorage.getItem('openid') && localStorage.getItem('access_token')) {
+        login({
+          access_token: localStorage.getItem('access_token'),
+          openId: localStorage.getItem('openid')
+        }).then(({ data: { user, token } }) => {
+          localStorage.clear();
+          this.login({
+            user,
+            token
+          });
+          window.loadingInstance.close();
+        });
+      }
+    }
   },
   mounted() {
-    const data = {};
-
-    if (localStorage.getItem('isLogin') === '1') {
-      Loading.service({
-        lock: true,
-        text: '登录中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
-    }
-
+    if (location.protocol === 'file') window.open('https://open.furuzix.top', '_self');
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
-        data.openId = openId;
-        if (localStorage.getItem('isLogin') === '1') {
-          localStorage.setItem('isLogin', '0');
+        window.localStorage.setItem(
+          'access_token',
+          location.hash
+            .split('=')[1]
+            .split('&')
+            .shift()
+        );
+        window.localStorage.setItem('openid', openId);
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
+          this.handleLogin();
+        } else {
           window.open('', '_self');
           window.close();
           window.close();
         }
       });
-      QC.api('get_user_info', {})
-        .success(({ data: { nickname, figureurl_2 } }) => {
-          data.nickname = nickname;
-          data.avatar = figureurl_2;
-          login(data).then(({ data: { user, token } }) => {
-            this.login({
-              user,
-              token
-            });
-          });
-        })
-        .error(err => {
-          console.error(err);
-        });
     }
+    this.handleLogin();
   }
 };
 </script>

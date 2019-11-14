@@ -5,6 +5,7 @@
     :visible.sync="dialogVisible"
     :append-to-body="true"
     :destroy-on-close="true"
+    :fullscreen="isFullscreen"
     :before-close="handleClose"
   >
     <ul v-if="type === 'star'" class="article-list">
@@ -57,6 +58,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      isFullscreen: false,
       type: '',
       stars: [],
       learning: []
@@ -78,8 +80,19 @@ export default {
     },
 
     handleClose(done) {
+      window.removeEventListener('resize', this.changeDialogWidth);
       done();
+    },
+
+    changeDialogWidth() {
+      if (window.innerWidth <= 768) this.isFullscreen = true;
+      else this.isFullscreen = false;
     }
+  },
+
+  mounted() {
+    this.changeDialogWidth();
+    window.addEventListener('resize', this.changeDialogWidth);
   }
 };
 </script>

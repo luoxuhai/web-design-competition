@@ -25,7 +25,6 @@ import {
     Image,
 } from 'element-ui';
 import avatar from 'vue-avatar';
-import GeminiScrollbar from 'vue-gemini-scrollbar';
 import ScrollReveal from 'scrollreveal';
 
 import AppBar from '@/components/AppBar';
@@ -63,8 +62,6 @@ Vue.use(Button)
     .use(Dialog)
     .use(Image)
     .use(DropdownMenu);
-
-Vue.use(GeminiScrollbar);
 
 Vue.component('avatar', avatar);
 

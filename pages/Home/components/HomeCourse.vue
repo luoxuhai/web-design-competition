@@ -46,6 +46,7 @@ import CourseLearner from '@/components/CourseLearner';
 BScroll.use(mouseWheel).use(ObserveDom);
 
 let maxScrollX = 0;
+let courses = [];
 
 export default {
   components: {
@@ -55,9 +56,7 @@ export default {
   props: {
     courses: {
       type: Array,
-      default: Array(5).fill({
-        title: ''
-      })
+      default: courses
     }
   },
 
@@ -99,7 +98,8 @@ export default {
   },
 
   watch: {
-    courses() {
+    courses(val) {
+      courses = val;
       this.$nextTick(() => this.changeResize());
     }
   },

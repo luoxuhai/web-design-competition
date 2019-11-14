@@ -127,6 +127,11 @@ export default {
     color: white;
     box-shadow: 0 2px 6px 6px rgba(0, 0, 0, 0.12);
 
+    &:hover {
+      background-color: #7200da !important;
+      color: white !important;
+    }
+
     .iconarrowright {
       margin-left: 0.5em;
       font-size: inherit;

@@ -26,37 +26,9 @@ module.exports = {
                       src: 'package.json'
                   }
               ],
-        /**
-         * alias for webpack
-         *
-         * @type {Object.<string, Object>}
-         */
-        alias: {
-            server: {
-                'iscroll/build/iscroll-lite$': path.join(
-                    __dirname,
-                    'core/iscroll-ssr.js'
-                )
-            }
-        },
-        /**
-         * node externals
-         *
-         * @type {Array.<string|RegExp>}
-         */
-        nodeExternalsWhitelist: [/iscroll/]
     },
     babel: {
-        presets: [['es2015', { modules: false }]],
-        plugins: [
-            [
-                'component',
-                {
-                    libraryName: 'element-ui',
-                    styleLibraryName: 'theme-chalk'
-                }
-            ]
-        ]
+        babelrc: true
     },
     extendWithWebpackChain(config, { type, env }) {
         // eslint 检测出错误时，依然继续编译

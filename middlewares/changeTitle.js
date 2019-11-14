@@ -1,12 +1,12 @@
 export default function(context) {
     const query = context.route.query;
-    const baseTitle = '网页设计大赛';
+    const baseTitle = '大国之窗';
     let title = baseTitle;
 
     switch (context.route.name) {
         case 'articleId':
         case 'courseId':
-            title = `${baseTitle}-${query.title}`;
+            title = `${query.title}-${baseTitle}`;
     }
     document.title = title;
 }

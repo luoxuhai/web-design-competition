@@ -1,7 +1,7 @@
 {
     "start_url": "/?utm_source=homescreen",
-    "name": "网页设计大赛",
-    "short_name": "网页设计大赛",
+    "name": "大国之窗",
+    "short_name": "大国之窗",
     "icons": [
         {
             "src": "img/icons/android-chrome-512x512.png",

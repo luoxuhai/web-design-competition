@@ -97,8 +97,9 @@ export default {
         articleId,
         content: content.trim()
       })
-        .then(res => {
+        .then(({ data }) => {
           this.newComments.unshift({
+            _id: data.id,
             user: this.user,
             content: content.trim()
           });
