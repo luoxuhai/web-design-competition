@@ -23,6 +23,7 @@ import {
     Avatar,
     Dialog,
     Image,
+    Loading
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import ScrollReveal from 'scrollreveal';
@@ -60,7 +61,8 @@ Vue.use(Button)
     .use(Tooltip)
     .use(Popover)
     .use(Dialog)
-    .use(Image)
+    .use(Image) 
+    .use(Loading) 
     .use(DropdownMenu);
 
 Vue.component('avatar', avatar);

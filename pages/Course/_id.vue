@@ -27,7 +27,7 @@
       </div>
       <div class="course__wrapper-chat">
         <section-title>课程讨论</section-title>
-        <chat-room />
+        <chat-room :courseId="course._id" />
       </div>
     </div>
   </div>

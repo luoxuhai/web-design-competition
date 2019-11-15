@@ -167,6 +167,7 @@ export default {
       .logo {
         display: flex;
         align-items: center;
+        flex-shrink: 0;
 
         &__image {
           width: 35px;
@@ -184,6 +185,7 @@ export default {
 
       .title {
         max-width: 640px;
+        margin: 0 10px;
         @include ellipsis;
         font-weight: 500;
         font-size: 22px;

@@ -22,16 +22,7 @@
           <span class="main__info-views">阅读 {{article.views_count}}</span>
           <span class="main__info-likes">点赞 {{article.like_count}}</span>
         </section>
-        <div class="main__content">
-          在以往的文章中少数派向大家介绍过 Magisk 的 安装方法、如何 隐藏 root 无痛玩机、这款神器以及在 Magisk 下实现 OTA 更新等等技巧，也推荐过不少实用的 Magisk 模块。
-          关联阅读：
-          装完 Magisk 不知道用什么？这是我的 Magisk 模块推荐 (1)、(2)
-          一部手机体验多种 OEM 定制功能，这些模块助你打破厂商壁垒
-          但俗话说「常在河边走，哪有不湿鞋」：最爱的模块并没有适配刚刚更新的系统、刚刚发现的新模块并不兼容自己手里的 Android 机……因为 Magisk 模块的兼容性问题导致手机无法正常开机的情况并不少见，如果你不幸遭遇这种情况，又该如何进行「救急」呢？
-          很多人在使用 Magisk 遇到问题时的第一反应往往是通过 Magisk Uninstaller 直接卸载 Magisk 框架而非 Magisk 模块。殊不知这样并不能从根本上解决由不兼容模块带来的问题——虽然手机因为 Magisk 模块无法加载能够正常开机，但卸载 Magisk 后也就丢失了 root 权限，我们不仅无法在开机状态下清除问题模块，在不清除数据重刷的情况下，重装 Magisk 框架后手机依然会在开机时读取先前的有兼容性问题的 Magisk 模块。
-          正确的处理方式是怎样的呢？
-          需要明确的是，我们在 Magisk 的介绍中已经多次强调
-        </div>
+        <div class="main__content" v-loading="!article.content" v-html="article.content" />
       </article>
       <aside v-if="isShowAside" class="aside">
         <div class="aside__item like">
@@ -67,11 +58,10 @@
 import { mapState, mapMutations } from 'vuex';
 import AppBar from '@/components/AppBar';
 import Comment from '@/components/Comment';
-import md from 'markdown-it';
 import Dayjs from 'dayjs';
 import { Message } from 'element-ui';
 import jrQrcode from 'jr-qrcode';
-import { queryArticle, queryArticleComment, like, star } from '@/api/article';
+import { queryArticle, queryArticleComment, queryArticleContent, like, star } from '@/api/article';
 import { checkToken } from '@/utils/utils';
 
 export default {
@@ -176,18 +166,18 @@ export default {
       this.article = data;
       this.isLike = data.isLike;
       this.isStar = data.isStar;
-    });
-
-    queryArticleComment(id).then(({ data }) => {
-      this.comments = data;
-    });
-
-    this.$nextTick(() => {
-      var result = md().render('# markdown-it rulezz!');
+      queryArticleContent(data.content_url).then(({ data }) => {
+        this.$set(this.article, 'content', data);
+        this.$nextTick(() => {
+          queryArticleComment(id).then(({ data }) => {
+            this.comments = data;
+          });
+        });
+      });
     });
   },
 
-  destroyed() {
+  beforeDestroy() {
     window.removeEventListener('scroll', this.changeFadeAppbar);
     window.removeEventListener('resize', this.changeWindowSize);
   }
@@ -223,11 +213,11 @@ export default {
     min-width: 330px;
 
     &__cover {
-      max-width: 700px;
-      width: 100%;
-      height: auto;
+      width: 700px;
       max-height: 350px;
+      min-height: 330px;
       margin: -240px 10px 0 10px;
+      border: none;
     }
 
     &__title {
@@ -247,6 +237,7 @@ export default {
     }
 
     &__content {
+      min-height: 100px;
       margin: 50px 0;
     }
   }

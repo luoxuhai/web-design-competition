@@ -8,7 +8,7 @@
     :fullscreen="isFullscreen"
     :before-close="handleClose"
   >
-    <ul v-if="type === 'star'" class="article-list">
+    <ul v-if="type === 'star'" class="article-list" v-loading="!stars.length">
       <li class="article-item" v-for="item of stars" :key="item._id">
         <el-image style="width: 80px; height: 80px" :src="item.cover" fit="cover" />
         <h2 class="article-title">{{ item.title }}</h2>
@@ -26,7 +26,7 @@
       </li>
       <li v-if="!stars.length">没有内容</li>
     </ul>
-    <ul v-else class="course-list">
+    <ul v-else class="course-list" v-loading="!learning.length">
       <li class="course-item" v-for="item of learning" :key="item._id">
         <div class="course-info">
           <h2 class="course-title">{{ item.title }}</h2>
@@ -103,6 +103,7 @@ export default {
   display: flex;
   flex-direction: column;
   max-height: 50vh;
+  min-height: 100px;
   overflow: auto;
 
   .article-item,
