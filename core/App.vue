@@ -16,8 +16,7 @@
     </transition>
     <div class="footer">
       <p>
-        Copyright
-        <Icon type="copyright" />2019 - present
+        Copyright © 2019 - present
         <mark>HBF</mark> All Rights Reserved
       </p>
     </div>
@@ -138,7 +137,8 @@ export default {
     }
   },
   mounted() {
-    if (location.protocol !== 'https:') window.open('https://open.furuzix.top', '_self');
+    if (location.protocol !== 'https:' && process.env.NODE_ENV !== 'development')
+      window.open('https://open.furuzix.top', '_self');
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         window.localStorage.setItem(
