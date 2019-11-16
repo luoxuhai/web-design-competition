@@ -3,9 +3,14 @@
     <section class="intro__wrapper">
       <h2 class="intro__title">推动中国发展的优秀思想理论集</h2>
       <hr class="divider" />
-      <small class="intro__sub">结合今年70周年国庆盛况，思考有哪些伟大的思想理论带领人民造就了当今的盛世中国），推动从严治团</small>
-      <el-button class="intro__button hvr-ripple-out">
-        开始学习
+      <small class="intro__sub">中国共产党以马克思列宁主义、毛泽东思想、邓小平理论、“三个代表”重要思想和科学发展观作为自己的行动指南</small>
+      <el-button
+        class="intro__button"
+        :class="[!isStartLearn && 'hvr-ripple-out']"
+        @click="handleStartLearnClick"
+        :loading="isStartLearn"
+      >
+        {{isStartLearn ? '请稍等' : '开始学习'}}
         <i class="icon iconarrowright" />
       </el-button>
       <section class="intro__toplearn">
@@ -29,19 +34,38 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 export default {
   props: {
     learner: Array
   },
 
-  data() {
-    return {};
+  methods: {
+    ...mapMutations('app', ['toggleStartLearn']),
+
+    handleStartLearnClick() {
+      this.toggleStartLearn();
+      setTimeout(() => {
+        this.$router.push({
+          name: 'courseId',
+          params: {
+            id: '5dc4237fc36eacd713113a14'
+          },
+          query: { title: '马克思列宁主义' }
+        });
+        this.toggleStartLearn();
+      }, 800);
+    }
+  },
+
+  computed: {
+    ...mapState('app', ['isStartLearn'])
   }
 };
 </script>
 
 <style lang='scss' scoped>
-@import "@/assets/scss/_mixins.scss";
+@import '@/assets/scss/_mixins.scss';
 
 @media screen and (max-width: 800px) {
   .intro__button {
@@ -63,7 +87,7 @@ export default {
 }
 
 .hvr-ripple-out:before {
-  content: "";
+  content: '';
   border: #7200da solid 6px;
   border-radius: 40px;
 }

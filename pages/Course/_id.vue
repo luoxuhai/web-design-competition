@@ -95,6 +95,19 @@ export default {
 
         addBarrage({ courseId: id, barrage });
       } else this.barrage = '';
+    },
+
+    getBarrage() {
+      // 获取弹幕
+      queryBarrage(this.id).then(({ data }) => {
+        this.player.danmu.bulletBtn.main.data = data.map(e => ({
+          ...e,
+          style: {
+            color: '#ff9500',
+            fontSize: '24px'
+          }
+        }));
+      });
     }
   },
 
@@ -112,7 +125,9 @@ export default {
 
     this.player = new XgPlayer({
       id: 'player',
-      poster: 'https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/video-cover.svg',
+      fluid: true,
+      poster:
+        'https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/video-cover.svg',
       playsinline: true,
       whitelist: [''],
       playbackRate: [0.5, 1, 1.5, 2],
@@ -144,19 +159,22 @@ export default {
       if (this.token)
         // 延时5秒加入课程
         setTimeout(() => addLearner(this.id), 5000);
+    });
 
-      barrageInterval = setInterval(() => {
-        // 获取弹幕
-        queryBarrage(this.id).then(({ data }) => {
-          this.player.danmu.bulletBtn.main.data = data.map(e => ({
-            ...e,
-            style: {
-              color: '#ff9500',
-              fontSize: '24px'
-            }
-          }));
-        });
-      }, 2000);
+    this.player.on('pause', () => {
+      clearInterval(barrageInterval);
+    });
+
+    this.player.on('ended', () => {
+      clearInterval(barrageInterval);
+    });
+
+    this.player.on('error', () => {
+      clearInterval(barrageInterval);
+    });
+
+    this.player.on('playing', () => {
+      barrageInterval = setInterval(this.getBarrage, 2000);
     });
   },
 
@@ -205,7 +223,6 @@ export default {
     }
 
     #player {
-      width: 100% !important;
     }
   }
 

@@ -6,7 +6,7 @@
       :isDark="true"
     >
       <transition name="el-zoom-in-top">
-        <div v-show="opacity === 1" class="transition-box">MariaDB CEO 痛斥云厂商对开源的无尽掠夺，从不回馈社区</div>
+        <div v-show="opacity === 1" class="transition-box">{{article.title}}</div>
       </transition>
     </app-bar>
     <div class="article__wrapper">
@@ -31,18 +31,24 @@
       </article>
       <aside v-if="isShowAside" class="aside">
         <div class="aside__item like">
-          <i
-            class="icon"
-            :class="isLike ? 'iconheart-fill' : 'iconheart'"
-            @click="handleLikeClick"
-          />
+          <el-tooltip effect="dark" content="点赞" placement="right-start">
+            <i
+              class="icon"
+              :class="isLike ? 'iconheart-fill' : 'iconheart'"
+              @click="handleLikeClick"
+            />
+          </el-tooltip>
         </div>
         <span class="like-count">{{article.like_count || 0}}</span>
         <a style="text-decoration: none; color: inherit" href="#comment">
-          <i class="icon iconcomment" />
+          <el-tooltip effect="dark" content="评论" placement="right-start">
+            <i class="icon iconcomment" />
+          </el-tooltip>
         </a>
         <span class="comment-count">{{comments ? comments.length : 0}}</span>
-        <i class="icon" :class="isStar ? 'iconstar-fill' : 'iconstar'" @click="handleStarClick" />
+        <el-tooltip effect="dark" content="收藏" placement="right-start">
+          <i class="icon" :class="isStar ? 'iconstar-fill' : 'iconstar'" @click="handleStarClick" />
+        </el-tooltip>
         <el-popover
           style="margin-top: 20px"
           placement="top-start"
@@ -332,6 +338,20 @@ export default {
 @media only screen and (max-width: 850px) {
   .article .aside {
     display: none;
+  }
+
+  .article__wrapper {
+    margin-top: 200px;
+  }
+
+  .article {
+    .main {
+      &__cover {
+        width: 100%;
+        min-height: auto;
+        margin-top: -150px;
+      }
+    }
   }
 }
 </style>

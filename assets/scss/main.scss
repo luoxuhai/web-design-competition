@@ -2,7 +2,6 @@
 @import '../css/Hover.css';
 @import '../css/iconfont.css';
 
-
 :root {
     --color-primary: #f9320c;
     // -ms-overflow-style: none;
@@ -18,6 +17,12 @@ body {
 }
 
 ::selection {
-    background-color: #f9330cb7;
+    background-color: var(--color-primary);
     color: white;
+}
+
+@media only screen and (max-width: 411px) {
+    :root {
+        user-select: none;
+    }
 }

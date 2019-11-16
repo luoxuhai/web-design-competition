@@ -160,6 +160,7 @@ export default {
     this.courseScroll = new BScroll('#chat-scroll', {
       click: true,
       bounceTime: 300,
+      preventDefaultException: { tagName: /^(INPUT|TEXTAREA|BUTTON|SELECT|P)$/ },
       mouseWheel: {
         speed: 20,
         invert: false,

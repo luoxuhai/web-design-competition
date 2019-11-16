@@ -6,13 +6,17 @@
         <hr class="divider" />
         <small class="header__sub">党的十八大以来中国的发展和成就，以及十九大报告中习近平总书记提出的中国特色社会主义进入新时代这一重大论述。</small>
       </li>
-      <li class="achievement__item" v-for="item of articles" :key="item._id">
+      <li class="achievement__item" v-for="(item, index) of articles" :key="item._id">
         <router-link
           class="achievement__item-content hvr-bob hvr-underline-from-center"
           :to="{path: `/article/${item._id}`, query: {title: item.title}}"
         >
           <div class="achievement__item-cover">
-            <img :src="item.cover && item.cover + '?x-oss-process=style/s'" :alt="item.title" />
+            <img
+              @load="loaded(index)"
+              :src="item.cover && item.cover + '?x-oss-process=style/s'"
+              :alt="item.title"
+            />
           </div>
           <div class="achievement__item-body">
             <h2 class="achievement__item-title">{{item.title}}</h2>
@@ -39,8 +43,10 @@ export default {
     articles: Array
   },
 
-  updated() {
-    this.$nextTick(() => this.$scrollReveal.reveal('.achievement__item'));
+  methods: {
+    loaded(index) {
+      if (index === 0) this.$scrollReveal.reveal('.achievement__item');
+    }
   },
 
   destroyed() {
@@ -206,7 +212,6 @@ export default {
         .achievement__item-title,
         .achievement__item-footer {
           color: #241c1c;
-          font-weight: bold;
         }
       }
     }

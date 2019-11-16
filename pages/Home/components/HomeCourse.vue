@@ -4,6 +4,7 @@
       <ul class="course__wrapper">
         <li
           class="course__item hvr-bob hvr-ripple-out"
+          :class="[index === 0 && isStartLearn && 'hvr-bob-ripple-hover']"
           :style="{ backgroundImage: `url('https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/course-${index}.svg')`}"
           v-for="(item, index) of courses"
           :key="index"
@@ -38,6 +39,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import BScroll from '@better-scroll/core';
 import mouseWheel from '@better-scroll/mouse-wheel';
 import ObserveDom from '@better-scroll/observe-dom';
@@ -101,7 +103,15 @@ export default {
     courses(val) {
       courses = val;
       this.$nextTick(() => this.changeResize());
+    },
+
+    isStartLearn(val) {
+      if (val) this.courseScroll.scrollTo(0, 0, 300);
     }
+  },
+
+  computed: {
+    ...mapState('app', ['isStartLearn'])
   },
 
   mounted() {
@@ -146,6 +156,29 @@ export default {
   border: #ffffff solid 6px;
   border-radius: 15px;
 }
+
+.hvr-bob-ripple-hover {
+  -webkit-animation-name: hvr-bob-float, hvr-bob;
+  animation-name: hvr-bob-float, hvr-bob;
+  -webkit-animation-duration: 0.3s, 1.5s;
+  animation-duration: 0.3s, 1.5s;
+  -webkit-animation-delay: 0s, 0.3s;
+  animation-delay: 0s, 0.3s;
+  -webkit-animation-timing-function: ease-out, ease-in-out;
+  animation-timing-function: ease-out, ease-in-out;
+  -webkit-animation-iteration-count: 1, infinite;
+  animation-iteration-count: 1, infinite;
+  -webkit-animation-fill-mode: forwards;
+  animation-fill-mode: forwards;
+  -webkit-animation-direction: normal, alternate;
+  animation-direction: normal, alternate;
+
+  &.hvr-ripple-out:before {
+    -webkit-animation-name: hvr-ripple-out;
+    animation-name: hvr-ripple-out;
+  }
+}
+
 .course {
   flex: 1;
   min-width: 470px;
