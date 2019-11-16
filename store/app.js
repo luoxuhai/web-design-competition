@@ -5,7 +5,7 @@
 
 export const state = () => {
     return {
-        isStartLearn: false
+        isStartLearn: false,
     };
 };
 

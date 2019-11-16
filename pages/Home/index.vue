@@ -67,7 +67,12 @@ export default {
 
     destroyed() {
         window.removeEventListener('scroll', this.changeFadeAppbar);
-    }
+    },
+
+    
+  activated() {
+    console.log('activated');
+  },
 };
 </script>
 

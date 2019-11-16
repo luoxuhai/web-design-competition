@@ -8,7 +8,7 @@
     :fullscreen="isFullscreen"
     :before-close="handleClose"
   >
-    <ul v-if="type === 'star'" class="article-list" v-loading="!stars.length">
+    <ul v-if="type === 'star'" class="article-list" v-loading="!loaded">
       <li class="article-item" v-for="item of stars" :key="item._id">
         <el-image
           style="width: 80px; height: 80px"
@@ -30,7 +30,7 @@
       </li>
       <li v-if="!stars.length">没有内容</li>
     </ul>
-    <ul v-else class="course-list" v-loading="!learning.length">
+    <ul v-else class="course-list" v-loading="!loaded">
       <li class="course-item" v-for="item of learning" :key="item._id">
         <div class="course-info">
           <h2 class="course-title">{{ item.title }}</h2>
@@ -64,6 +64,7 @@ export default {
       dialogVisible: false,
       isFullscreen: false,
       type: '',
+      loaded: false,
       stars: [],
       learning: []
     };
@@ -78,16 +79,19 @@ export default {
       if (type === 'star')
         queryStars().then(({ data }) => {
           this.stars = data;
+          this.loaded = true;
         });
       else
         queryLearning().then(({ data }) => {
           this.learning = data;
+          this.loaded = true;
         });
     },
 
     handleClose() {
       window.removeEventListener('resize', this.changeDialogWidth);
       this.dialogVisible = false;
+      this.loaded = false;
     },
 
     changeDialogWidth() {

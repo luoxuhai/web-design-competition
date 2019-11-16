@@ -25,7 +25,7 @@ module.exports = {
                   {
                       src: 'package.json'
                   }
-              ],
+              ]
     },
     babel: {
         babelrc: true
@@ -46,17 +46,25 @@ module.exports = {
     router: {
         mode: 'history',
         base: '/',
-        pageTransition: {
-            type: 'slide',
-            transitionClass: 'slide',
-            slideRightClass: 'slide-right',
-            alwaysBackPages: ['home']
-        },
         routes: [
             {
                 pattern: '/home',
                 meta: {
                     keepAlive: true
+                },
+                skeletonId: 'home-skeleton',
+                componentPath: 'core/Skeleton.vue'
+            },
+            {
+                pattern: /\/article\/\D+/,
+                meta: {
+                    scrollToTop: true
+                }
+            },
+            {
+                pattern: /\/course\/\D+/,
+                meta: {
+                    scrollToTop: true
                 }
             }
         ]
@@ -75,12 +83,14 @@ module.exports = {
         // Path of generated service worker file
         swDest: path.join(BUILD_PATH, 'service-worker.js'),
 
+        globPatterns: ['**/*.{html,js,css,eot,svg,ttf,woff}'],
+
         // If true, `workbox.routing.registerNavigationRoute()` won't be generated
         // Defaults to `false`
-        disableGenerateNavigationRoute: true,
+        disableGenerateNavigationRoute: true
 
         // URL of appshell page
         // ONLY works in SSR mode
-        appshellUrl: '/appshell'
+        // appshellUrl: '/appshell'
     }
 };
