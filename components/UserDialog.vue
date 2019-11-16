@@ -44,7 +44,7 @@
       <li v-if="!learning.length">没有内容</li>
     </ul>
     <span slot="footer" class="dialog-footer">
-      <el-button @click="dialogVisible = false">关 闭</el-button>
+      <el-button @click="handleClose">关 闭</el-button>
     </span>
   </el-dialog>
 </template>
@@ -72,6 +72,8 @@ export default {
   methods: {
     handleShowDialog(type) {
       this.type = type;
+      this.changeDialogWidth();
+      window.addEventListener('resize', this.changeDialogWidth);
       this.dialogVisible = true;
       if (type === 'star')
         queryStars().then(({ data }) => {
@@ -83,20 +85,15 @@ export default {
         });
     },
 
-    handleClose(done) {
+    handleClose() {
       window.removeEventListener('resize', this.changeDialogWidth);
-      done();
+      this.dialogVisible = false;
     },
 
     changeDialogWidth() {
       if (window.innerWidth <= 768) this.isFullscreen = true;
       else this.isFullscreen = false;
     }
-  },
-
-  mounted() {
-    this.changeDialogWidth();
-    window.addEventListener('resize', this.changeDialogWidth);
   }
 };
 </script>
