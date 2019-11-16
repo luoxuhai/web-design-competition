@@ -1,5 +1,10 @@
 <template>
-  <div class="chat-room">
+  <div
+    class="chat-room"
+    v-loading="!connected"
+    element-loading-text="拼命加载中"
+    element-loading-background="rgba(255, 255, 255, 0.5)"
+  >
     <div id="chat-scroll">
       <ul class="chat-room__list">
         <li
@@ -19,6 +24,7 @@
             <p class="chat-room__item-content">{{item.payload.content}}</p>
           </div>
         </li>
+        <li class="chat-room__item-empty" v-if="connected && !messages.length">暂无消息</li>
       </ul>
     </div>
     <div class="chat-room__input-container">
@@ -26,7 +32,7 @@
         type="textarea"
         v-model="message"
         :autosize="{ minRows: 1, maxRows: 4}"
-        placeholder="请输入内容"
+        placeholder="请输入消息"
       ></el-input>
       <el-button
         class="chat-room__input-submit"
@@ -41,6 +47,7 @@
 
 <script>
 import { mapState } from 'vuex';
+import { Message } from 'element-ui';
 import BScroll from '@better-scroll/core';
 import mouseWheel from '@better-scroll/mouse-wheel';
 import ScrollBar from '@better-scroll/scroll-bar';
@@ -66,7 +73,8 @@ export default {
   data() {
     return {
       message: '',
-      messages: []
+      messages: [],
+      connected: false
     };
   },
   methods: {
@@ -88,16 +96,18 @@ export default {
         },
         payload: {
           content,
-          course: this.courseId,
+          courseId: this.courseId,
           createdAt: Date.now()
         }
       };
       socket.emit('broadcast', message);
       this.messages.push(message);
+      this.message = '';
     },
 
     handleSendMessageClick() {
-      if (this.validateInputValue(this.message)) this.sendMessage(this.message);
+      const { validateInputValue, sendMessage, message } = this;
+      if (validateInputValue(message)) sendMessage(message);
     }
   },
 
@@ -109,7 +119,8 @@ export default {
     socket = io(
       process.env.NODE_ENV === 'development'
         ? 'http://127.0.0.1:8099/chat_room'
-        : 'https://open.furuzix.top/api/web/chat_room'
+        : 'https://open.furuzix.top/chat_room',
+      { path: '/api/web/socket.io' }
     );
 
     socket.connect();
@@ -122,7 +133,7 @@ export default {
           socket.emit('broadcast', {
             isConnect: true,
             payload: {
-              course: this.courseId
+              courseId: this.courseId
             }
           });
         }, 500);
@@ -137,6 +148,7 @@ export default {
     // 接送消息列表
     socket.on('messages', msgs => {
       this.messages = msgs;
+      this.connected = true;
       this.$nextTick(() => {
         this.courseScroll.scrollTo(0, this.courseScroll.maxScrollY, 0);
       });
@@ -165,7 +177,7 @@ export default {
 
   beforeDestroy() {
     socket && socket.close();
-    sccket = null;
+    socket = null;
   }
 };
 </script>
@@ -193,6 +205,12 @@ export default {
     margin-bottom: 10px;
     border-radius: 5px;
     color: #dcddde;
+
+    &-empty {
+      color: #dcddde;
+      text-align: center;
+      line-height: 4;
+    }
 
     &-right {
       flex-direction: row-reverse;
