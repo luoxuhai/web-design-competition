@@ -12,7 +12,7 @@
           :to="{path: `/article/${item._id}`, query: {title: item.title}}"
         >
           <div class="achievement__item-cover">
-            <img :src="item.cover" :alt="item.title" />
+            <img :src="item.cover && item.cover + '?x-oss-process=style/s'" :alt="item.title" />
           </div>
           <div class="achievement__item-body">
             <h2 class="achievement__item-title">{{item.title}}</h2>
@@ -203,8 +203,10 @@ export default {
           transform: scale(1.1);
         }
 
-        .achievement__item-title {
+        .achievement__item-title,
+        .achievement__item-footer {
           color: #241c1c;
+          font-weight: bold;
         }
       }
     }

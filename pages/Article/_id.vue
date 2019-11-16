@@ -11,14 +11,19 @@
     </app-bar>
     <div class="article__wrapper">
       <article id="article" class="main">
-        <img class="main__cover" :src="article.cover" :alt="article.title" :title="article.title" />
+        <img
+          class="main__cover"
+          :src="article.cover && article.cover + '?x-oss-process=style/fade'"
+          :alt="article.title"
+          :title="article.title"
+        />
         <h1 class="main__title">{{article.title}}</h1>
         <section class="main__info">
           <time class="main__info-date">
             <i class="icon iconshijian" />
             {{article.createdAt | formatDate}}
           </time>
-          <span class="main__info-words">字数 1525</span>
+          <span class="main__info-words">字数 {{words}}</span>
           <span class="main__info-views">阅读 {{article.views_count}}</span>
           <span class="main__info-likes">点赞 {{article.like_count}}</span>
         </section>
@@ -82,6 +87,7 @@ export default {
       article: {},
       comments: [],
       qrcode: '',
+      words: 0,
       isLike: false,
       isStar: false,
       isShowAside: true
@@ -147,6 +153,11 @@ export default {
       this.qrcode = jrQrcode.getQrBase64(window.location.href, {
         correctLevel: 3
       });
+    },
+
+    countWords() {
+      const richMediaContent = document.querySelector('.main__content');
+      this.words = richMediaContent ? richMediaContent.textContent.length : 0;
     }
   },
 
@@ -169,6 +180,7 @@ export default {
       queryArticleContent(data.content_url).then(({ data }) => {
         this.$set(this.article, 'content', data);
         this.$nextTick(() => {
+          this.countWords();
           queryArticleComment(id).then(({ data }) => {
             this.comments = data;
           });

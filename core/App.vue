@@ -137,8 +137,6 @@ export default {
     }
   },
   mounted() {
-    if (location.protocol !== 'https:' && process.env.NODE_ENV !== 'development')
-      window.open('https://open.furuzix.top', '_self');
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         window.localStorage.setItem(

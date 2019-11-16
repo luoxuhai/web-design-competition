@@ -10,7 +10,11 @@
   >
     <ul v-if="type === 'star'" class="article-list" v-loading="!stars.length">
       <li class="article-item" v-for="item of stars" :key="item._id">
-        <el-image style="width: 80px; height: 80px" :src="item.cover" fit="cover" />
+        <el-image
+          style="width: 80px; height: 80px"
+          :src="item.cover && item.cover + '?x-oss-process=style/xs'"
+          fit="cover"
+        />
         <h2 class="article-title">{{ item.title }}</h2>
         <footer class="article-footer">
           <span>
