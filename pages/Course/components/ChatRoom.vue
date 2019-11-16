@@ -53,6 +53,7 @@ import mouseWheel from '@better-scroll/mouse-wheel';
 import ScrollBar from '@better-scroll/scroll-bar';
 import Dayjs from 'dayjs';
 import io from 'socket.io-client';
+import { checkToken } from '@/utils/utils';
 
 let socket = null;
 let maxScrollY = 0;
@@ -86,6 +87,7 @@ export default {
     },
 
     sendMessage(content) {
+      if (!checkToken(this.token)) return;
       if (!socket.connected) throw Error('socket未连接');
       const { nickname, openId, avatar } = this.user;
       const message = {
@@ -112,7 +114,7 @@ export default {
   },
 
   computed: {
-    ...mapState('user', ['user'])
+    ...mapState('user', ['user', 'token'])
   },
 
   mounted() {
