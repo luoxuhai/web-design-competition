@@ -14,6 +14,28 @@
         ></router-view>
       </keep-alive>
     </transition>
+    <footer class="flex-container">
+      <div class="flex-item">
+        <p>友情链接</p>
+        <a href="http://theory.people.com.cn/GB/179412/">马克思主义学习网</a>
+        <a href="http://www.gov.cn/">中国政府网</a>
+        <a href="http://cpc.people.com.cn/">中国共产党新闻网</a>
+      </div>
+
+      <div class="flex-item">
+        <p>更多</p>
+        <p>建议反馈</p>
+      </div>
+
+      <div class="flex-item">
+        <p>联系我们</p>
+        <img src="../static/img/icons/weixin.png" alt="微信图标" />
+        <img src="../static/img/icons/QQ.png" alt="QQ图标" />
+        <img src="../static/img/icons/QQkongjian.png" alt="QQ空间图标" />
+        <img src="../static/img/icons/weibo.png" alt="微博图标" />
+        <img src="../static/img/icons/linkedin.png" alt="领英图标" />
+      </div>
+    </footer>
     <div class="footer">
       <p>
         Copyright © 2019 - present
@@ -175,9 +197,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 100px;
+    height: 50px;
     margin-top: auto;
-    background-color: #f4f4f4;
+    background-color: rgb(59, 58, 58);
     color: rgb(153, 153, 153);
   }
 }
@@ -195,5 +217,24 @@ export default {
       background-color: lighten(#f9320c, 10);
     }
   }
+}
+.flex-container {
+  justify-content: space-around;
+  color: white;
+  display: flex;
+  background-color: rgb(59, 58, 58);
+}
+.flex-item a {
+  text-decoration: none;
+  color: white;
+  display: block;
+  margin-bottom: 15px;
+}
+.flex-item p {
+  margin: 25px 0 25px 0;
+}
+.flex-item img {
+  width: 25px;
+  height: 25px;
 }
 </style>
