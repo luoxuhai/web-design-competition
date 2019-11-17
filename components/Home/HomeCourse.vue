@@ -307,7 +307,7 @@ export default {
   }
 }
 
-@media screen and (max-width: 776px) {
+@media screen and (max-width: 797px) {
   .course {
     padding-top: 50px !important;
     padding-bottom: 30px;

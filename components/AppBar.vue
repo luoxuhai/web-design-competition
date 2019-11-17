@@ -218,4 +218,10 @@ export default {
     display: none !important;
   }
 }
+
+@media only screen and (max-width: 797px) {
+  .user__name {
+    color: '#333' !important;
+  }
+}
 </style>
