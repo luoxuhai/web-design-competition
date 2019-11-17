@@ -1,11 +1,9 @@
 <template>
   <div id="app">
     <keep-alive :include="[...keepAlivePages]">
-      <router-view
-        :key="routerViewKey"
-        :data-page-id="$route.fullPath"
-      ></router-view>
+      <router-view :key="routerViewKey" :data-page-id="$route.fullPath"></router-view>
     </keep-alive>
+
     <footer class="footer">
       <div class="flex-container">
         <div class="flex-item">

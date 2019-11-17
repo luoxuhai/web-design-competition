@@ -18,9 +18,9 @@
 
 <script>
 import AppBar from '@/components/AppBar';
-import HomeIntro from './components/HomeIntro';
-import HomeCourse from './components/HomeCourse';
-import Achievement from './components/Achievement';
+import HomeIntro from '@/components/Home/HomeIntro';
+import HomeCourse from '@/components/Home/HomeCourse';
+import Achievement from '@/components/Home/Achievement';
 import { queryArticles } from '@/api/article';
 import { queryCourses } from '@/api/course';
 export default {

@@ -27,7 +27,6 @@ import {
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import ScrollReveal from 'scrollreveal';
-
 import AppBar from '@/components/AppBar';
 
 const scrollReveal = ScrollReveal({
@@ -61,8 +60,8 @@ Vue.use(Button)
     .use(Tooltip)
     .use(Popover)
     .use(Dialog)
-    .use(Image) 
-    .use(Loading) 
+    .use(Image)
+    .use(Loading)
     .use(DropdownMenu);
 
 Vue.component('avatar', avatar);

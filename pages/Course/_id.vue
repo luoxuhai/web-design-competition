@@ -39,7 +39,7 @@ import XgPlayer from 'xgplayer';
 import uuidv4 from 'uuid/v4';
 import { Message } from 'element-ui';
 import SectionTitle from '@/components/SectionTitle';
-import ChatRoom from './components/ChatRoom';
+import ChatRoom from '@/components/Course/ChatRoom';
 import { checkToken } from '@/utils/utils';
 import { queryCourse, addLearner, addBarrage, queryBarrage } from '@/api/course';
 
