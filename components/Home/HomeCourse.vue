@@ -6,7 +6,7 @@
           class="course__item hvr-bob hvr-ripple-out"
           :class="[index === 0 && isStartLearn && 'hvr-bob-ripple-hover']"
           :style="{ backgroundImage: `url('https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/images/course-${index}.svg')`}"
-          v-for="(item, index) of courses"
+          v-for="(item, index) of newCourses"
           :key="index"
           :data-id="item._id"
           :data-title="item.title"
@@ -48,7 +48,6 @@ import CourseLearner from '@/components/CourseLearner';
 BScroll.use(mouseWheel).use(ObserveDom);
 
 let maxScrollX = 0;
-let courses = [];
 
 export default {
   components: {
@@ -56,16 +55,14 @@ export default {
   },
 
   props: {
-    courses: {
-      type: Array,
-      default: courses
-    }
+    courses: Array
   },
 
   data() {
     return {
       scrollWidth: 0,
-      next: true
+      next: true,
+      newCourses: []
     };
   },
 
@@ -101,8 +98,13 @@ export default {
 
   watch: {
     courses(val) {
-      courses = val;
-      this.$nextTick(() => this.changeResize());
+      this.$scrollReveal.reveal('.course__wrapper', { reset: false, delay: 0, duration: 300 });
+      setTimeout(() => {
+        this.newCourses = val;
+        this.$nextTick(() => {
+          this.changeResize();
+        });
+      });
     },
 
     isStartLearn(val) {
@@ -115,7 +117,6 @@ export default {
   },
 
   mounted() {
-    window.addEventListener('resize', this.changeResize);
     this.setScrollWidth();
     this.courseScroll = new BScroll('#course-scroll', {
       scrollX: true,
@@ -144,7 +145,11 @@ export default {
     });
   },
 
-  destroyed() {
+  activated() {
+    window.addEventListener('resize', this.changeResize);
+  },
+
+  deactivated() {
     window.removeEventListener('resize', this.changeResize);
   }
 };

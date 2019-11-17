@@ -45,11 +45,15 @@ export default {
 
   methods: {
     loaded(index) {
-      if (index === 0) this.$scrollReveal.reveal('.achievement__item');
+      if (index === 0) this.$scrollReveal.reveal('.achievement__item-content');
     }
   },
 
-  destroyed() {
+  activated() {
+    this.$scrollReveal.reveal('.achievement__item-content');
+  },
+
+  deactivated() {
     this.$scrollReveal.destroy();
   }
 };

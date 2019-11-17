@@ -176,7 +176,6 @@ export default {
   },
 
   mounted() {
-    console.log('mounted');
     const id = window.location.pathname.split('/')[2];
     window.addEventListener('scroll', this.changeFadeAppbar);
 
@@ -194,10 +193,6 @@ export default {
         });
       });
     });
-  },
-
-  activated() {
-    console.log('activated');
   },
 
   beforeDestroy() {
