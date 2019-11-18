@@ -26,15 +26,18 @@ self.addEventListener('message', event => {
 /**
  * example runningCache with api
  */
-workbox.routing.registerRoute(/^https:\/\/open\.furuzix\.top\/api\/web\/\D+/,
-    workbox.strategies.networkFirst());
+workbox.routing.registerRoute(
+    /^https:\/\/open\.furuzix\.top\/api\/web\/.+/,
+    workbox.strategies.networkFirst()
+);
 
 /**
  * example runningCache with resources from CDN
  * including maxAge, maxEntries
  * cacheableResponse is important for CDN
  */
-workbox.routing.registerRoute(/^https:\/\/ito\.oss-cn-beijing\.aliyuncs\.com\/web-design-competition\/\D+/i,
+workbox.routing.registerRoute(
+    /^https:\/\/ito\.oss-cn-beijing\.aliyuncs\.com\/web-design-competition\/\D+/i,
     workbox.strategies.cacheFirst({
         cacheName: 'lavas-cache-images',
         plugins: [

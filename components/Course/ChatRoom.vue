@@ -87,7 +87,6 @@ export default {
     },
 
     sendMessage(content) {
-      if (!checkToken(this.token)) return;
       if (!socket.connected) throw Error('socket未连接');
       const { nickname, openId, avatar } = this.user;
       const message = {
@@ -108,6 +107,7 @@ export default {
     },
 
     handleSendMessageClick() {
+      if (!checkToken(this.token)) return;
       const { validateInputValue, sendMessage, message } = this;
       if (validateInputValue(message)) sendMessage(message);
     }

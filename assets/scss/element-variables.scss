@@ -5,3 +5,9 @@ $--color-primary: #f9320c;
 $--font-path: '~element-ui/lib/theme-chalk/fonts';
 
 @import '~element-ui/packages/theme-chalk/src/index';
+
+@media only screen and (max-width: 430px) {
+    .el-message-box {
+        width: 300px;
+    }
+}

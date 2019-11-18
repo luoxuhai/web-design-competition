@@ -14,6 +14,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.skeleton-wrapper {
+  width: 100vw;
+  height: 100vh;
+  background-color: white;
+}
+
 .spinner {
   width: 60px;
   height: 60px;
@@ -28,7 +34,7 @@ export default {
   width: 100%;
   height: 100%;
   border-radius: 50%;
-  background-color: var(--primary-color);
+  background-color: var(--color-primary);
   opacity: 0.6;
   position: absolute;
   top: 0;

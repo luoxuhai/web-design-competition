@@ -26,7 +26,8 @@ export function checkToken(token) {
         MessageBox.confirm('请登录后操作!', '提示', {
             confirmButtonText: '确定',
             showCancelButton: false,
-            type: 'warning'
+            type: 'warning',
+            roundButton: true
         });
         return false;
     } else return true;

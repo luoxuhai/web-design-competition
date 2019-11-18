@@ -59,6 +59,7 @@
 import { mapState, mapMutations } from 'vuex';
 import { MessageBox, Message, Loading } from 'element-ui';
 import UserDialog from './UserDialog';
+import { login, update } from '@/api/user';
 
 export default {
   components: {
@@ -79,7 +80,7 @@ export default {
   },
 
   methods: {
-    ...mapMutations('user', ['logout']),
+    ...mapMutations('user', ['logout', 'login']),
 
     handleShowDialogClick(e) {
       switch (e) {
@@ -96,30 +97,41 @@ export default {
 
     handleLoginClick() {
       let loginInterval = null;
-      window.loadingInstance = Loading.service({
-        lock: true,
-        text: '登录中',
-        spinner: 'el-icon-loading',
-        background: 'rgba(0, 0, 0, 0.7)'
-      });
 
-      window.addEventListener('beforeunload', () => {
-        window.loadingInstance.close();
-        localStorage.setItem('isLogin', '0');
-      });
+      // pc端关闭登录窗口
+      if (!/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
+        window.loadingInstance = Loading.service({
+          lock: true,
+          text: '登录中',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
 
-      loginInterval = setInterval(() => {
-        if (
-          !document.hidden &&
-          localStorage.getItem('openid') &&
-          localStorage.getItem('access_token')
-        ) {
-          clearInterval(loginInterval);
-          location.reload();
-        }
-      }, 100);
+        window.addEventListener('beforeunload', () => {
+          window.loginWin.close();
+        });
 
-      QC.Login.showPopup({
+        loginInterval = setInterval(() => {
+          if (localStorage.getItem('openid') && localStorage.getItem('access_token')) {
+            clearInterval(loginInterval);
+            window.loginWin.close();
+            login({
+              access_token: localStorage.getItem('access_token'),
+              openId: localStorage.getItem('openid')
+            }).then(({ data: { user, token } }) => {
+              window.loadingInstance.close();
+              Message.success({ message: '登录成功!' });
+              localStorage.clear();
+              this.login({
+                user,
+                token
+              });
+            });
+          }
+        }, 16);
+      }
+
+      window.loginWin = QC.Login.showPopup({
         appId: '101816819',
         redirectURI:
           process.env.NODE_ENV === 'development'
@@ -132,7 +144,8 @@ export default {
       MessageBox.confirm('确认退出?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        type: 'warning'
+        type: 'warning',
+        roundButton: true
       }).then(() => {
         this.logout();
       });

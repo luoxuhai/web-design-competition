@@ -29,37 +29,43 @@
         </section>
         <div class="main__content" v-loading="!article.content" v-html="article.content" />
       </article>
-      <aside v-if="isShowAside" class="aside">
-        <div class="aside__item like">
-          <el-tooltip effect="dark" content="点赞" placement="right-start">
+      <transition name="el-zoom-in-top">
+        <aside v-show="asideVisible" class="aside">
+          <div class="aside__item like">
+            <el-tooltip effect="dark" content="点赞" placement="right-start">
+              <i
+                class="icon"
+                :class="isLike ? 'iconheart-fill' : 'iconheart'"
+                @click="handleLikeClick"
+              />
+            </el-tooltip>
+          </div>
+          <span class="like-count">{{article.like_count || 0}}</span>
+          <a style="text-decoration: none; color: inherit" href="#comment">
+            <el-tooltip effect="dark" content="评论" placement="right-start">
+              <i class="icon iconcomment" />
+            </el-tooltip>
+          </a>
+          <span class="comment-count">{{comments ? comments.length : 0}}</span>
+          <el-tooltip effect="dark" content="收藏" placement="right-start">
             <i
               class="icon"
-              :class="isLike ? 'iconheart-fill' : 'iconheart'"
-              @click="handleLikeClick"
+              :class="isStar ? 'iconstar-fill' : 'iconstar'"
+              @click="handleStarClick"
             />
           </el-tooltip>
-        </div>
-        <span class="like-count">{{article.like_count || 0}}</span>
-        <a style="text-decoration: none; color: inherit" href="#comment">
-          <el-tooltip effect="dark" content="评论" placement="right-start">
-            <i class="icon iconcomment" />
-          </el-tooltip>
-        </a>
-        <span class="comment-count">{{comments ? comments.length : 0}}</span>
-        <el-tooltip effect="dark" content="收藏" placement="right-start">
-          <i class="icon" :class="isStar ? 'iconstar-fill' : 'iconstar'" @click="handleStarClick" />
-        </el-tooltip>
-        <el-popover
-          style="margin-top: 20px"
-          placement="top-start"
-          title="扫码分享"
-          width="150"
-          trigger="hover"
-        >
-          <img style="width: 100%" :src="qrcode" alt="二维码" />
-          <i class="icon iconshare" @mouseenter="getQrcodeMouseenter" slot="reference" />
-        </el-popover>
-      </aside>
+          <el-popover
+            style="margin-top: 20px"
+            placement="top-start"
+            title="扫码分享"
+            width="150"
+            trigger="hover"
+          >
+            <img style="width: 100%" :src="qrcode" alt="二维码" />
+            <i class="icon iconshare" @mouseenter="getQrcodeMouseenter" slot="reference" />
+          </el-popover>
+        </aside>
+      </transition>
     </div>
     <comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
   </div>
@@ -96,15 +102,22 @@ export default {
       words: 0,
       isLike: false,
       isStar: false,
-      isShowAside: true
+      asideVisible: true
     };
   },
 
   methods: {
     changeFadeAppbar() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop < 150) this.opacity = scrollTop / 150;
+      if (scrollTop < 150) this.opacity = scrollTop - 320;
       else this.opacity = 1;
+
+      if (
+        document.getElementById('comment').getBoundingClientRect().top <=
+        window.innerHeight / 1.2
+      )
+        this.asideVisible = false;
+      else this.asideVisible = true;
     },
 
     handleLikeClick() {
@@ -217,7 +230,7 @@ export default {
   &__wrapper {
     display: flex;
     justify-content: center;
-    margin-top: 250px;
+    margin-top: 240px;
     padding: 0 10px;
     background-color: #fff;
   }
@@ -265,6 +278,7 @@ export default {
     flex-direction: column;
     align-items: center;
     position: fixed;
+    top: 320px;
     left: 150px;
     font-size: 14px;
     color: #8e8787;
@@ -352,6 +366,12 @@ export default {
         margin-top: -150px;
       }
     }
+  }
+}
+
+@media only screen and (max-width: 411px) {
+  .main__content {
+    user-select: text;
   }
 }
 </style>
