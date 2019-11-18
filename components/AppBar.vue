@@ -2,18 +2,16 @@
   <header class="appbar">
     <nav class="appbar__wrapper">
       <ul class="appbar__wrapper-list">
-        <li class="logo">
-          <el-tooltip effect="dark" content="大国之窗">
-            <router-link :to="{ name: 'home' }">
-              <img
-                class="logo__image"
-                src="../static/img/icons/android-chrome-512x512.png"
-                alt="大国之窗logo"
-              />
-            </router-link>
-          </el-tooltip>
-          <h1 class="logo__title">大国之窗</h1>
-        </li>
+        <el-tooltip effect="dark" content="大国之窗">
+          <li class="logo" @click="handleBack">
+            <img
+              class="logo__image"
+              src="../static/img/icons/android-chrome-512x512.png"
+              alt="大国之窗logo"
+            />
+            <h1 class="logo__title">大国之窗</h1>
+          </li>
+        </el-tooltip>
         <li class="title">
           <slot />
         </li>
@@ -83,6 +81,11 @@ export default {
     ...mapMutations('user', ['logout', 'login']),
 
     ...mapActions('user', ['saveLogin']),
+
+    handleBack() {
+      if (this.$route.name === 'home') location.reload();
+      else this.$router.back();
+    },
 
     handleShowDialogClick(e) {
       switch (e) {
@@ -161,6 +164,7 @@ export default {
         display: flex;
         align-items: center;
         flex-shrink: 0;
+        cursor: pointer;
 
         &__image {
           width: 35px;
