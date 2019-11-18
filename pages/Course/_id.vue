@@ -44,7 +44,6 @@ import { checkToken } from '@/utils/utils';
 import { queryCourse, addLearner, addBarrage, queryBarrage } from '@/api/course';
 
 let barrageInterval = null;
-let isUpdate = false;
 
 export default {
   components: {
@@ -114,8 +113,20 @@ export default {
     },
 
     handleAddLearner() {
-      addLearner(this.id).then(() => {
-        isUpdate = true;
+      const { id, user, courses, learner, saveLearner, saveCourses } = this;
+      addLearner(id).then(() => {
+        saveLearner([user, ...learner.filter(({ openId }) => openId !== user.openId)].slice(0, 3));
+        saveCourses(
+          courses.map(e => {
+            if (e._id === id) {
+              e.learner = [user, ...e.learner.filter(({ openId }) => openId !== user.openId)].slice(
+                0,
+                4
+              );
+            }
+            return e;
+          })
+        );
       });
     }
   },
@@ -187,25 +198,6 @@ export default {
     this.player.on('playing', () => {
       barrageInterval = setInterval(this.getBarrage, 2000);
     });
-  },
-
-  beforeDestroy() {
-    const { id, user, courses, learner, saveLearner, saveCourses } = this;
-    if (isUpdate) {
-      saveLearner([user, ...learner.filter(({ openId }) => openId !== user.openId)].slice(0, 3));
-      saveCourses(
-        courses.map(e => {
-          if (e._id === id) {
-            e.learner = [user, ...e.learner.filter(({ openId }) => openId !== user.openId)].slice(
-              0,
-              4
-            );
-          }
-          return e;
-        })
-      );
-    }
-    isUpdate = false;
   },
 
   destroyed() {

@@ -77,7 +77,7 @@ export default {
 
     changeResize() {
       this.setScrollWidth();
-      this.courseScroll.refresh();
+      this.courseScroll && this.courseScroll.refresh();
     },
 
     handleToCourseClick(e) {
@@ -98,8 +98,10 @@ export default {
   },
 
   watch: {
-    courses(val) {
-      this.$scrollReveal.reveal('.course__wrapper', { reset: false, delay: 0, duration: 300 });
+    courses(val, old) {
+      if (val.length !== old.length)
+        this.$scrollReveal.reveal('.course__wrapper', { reset: false, delay: 0, duration: 300 });
+      // 避免动画开始前闪烁
       setTimeout(() => {
         this.newCourses = val;
         this.$nextTick(() => {
@@ -118,16 +120,12 @@ export default {
   },
 
   mounted() {
-    this.setScrollWidth();
     this.courseScroll = new BScroll('#course-scroll', {
       scrollX: true,
       click: true,
       bounceTime: 500,
       observeDom: true,
       probeType: 3,
-      preventDefaultException: {
-        tagName: /^(SPAN|IMG)$/
-      },
       mouseWheel: {
         speed: 20,
         invert: false,
@@ -147,6 +145,7 @@ export default {
   },
 
   activated() {
+    this.changeResize();
     window.addEventListener('resize', this.changeResize);
   },
 
