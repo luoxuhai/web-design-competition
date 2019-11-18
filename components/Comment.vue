@@ -86,7 +86,7 @@ export default {
     },
 
     handleSubmitComment() {
-      if (!checkToken(this.token)) return;
+      if (!checkToken()) return;
 
       this.validateInputValue(this.submitComment);
     },
@@ -126,7 +126,7 @@ export default {
   },
 
   computed: {
-    ...mapState('user', ['user', 'token']),
+    ...mapState('user', ['user']),
 
     newComments() {
       return this.comments;

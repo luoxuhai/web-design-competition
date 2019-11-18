@@ -75,7 +75,7 @@ export default {
     },
 
     handleSendBarrageClick() {
-      if (!checkToken(this.token)) return;
+      if (!checkToken()) return;
 
       const { validateInputValue, player, id } = this;
       if (validateInputValue(this.barrage)) {

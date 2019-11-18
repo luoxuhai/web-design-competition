@@ -107,14 +107,14 @@ export default {
     },
 
     handleSendMessageClick() {
-      if (!checkToken(this.token)) return;
+      if (!checkToken()) return;
       const { validateInputValue, sendMessage, message } = this;
       if (validateInputValue(message)) sendMessage(message);
     }
   },
 
   computed: {
-    ...mapState('user', ['user', 'token'])
+    ...mapState('user', ['user'])
   },
 
   mounted() {

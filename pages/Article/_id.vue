@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapMutations } from 'vuex';
 import AppBar from '@/components/AppBar';
 import Comment from '@/components/Comment';
 import Dayjs from 'dayjs';
@@ -121,7 +121,7 @@ export default {
     },
 
     handleLikeClick() {
-      if (!checkToken(this.token)) return;
+      if (!checkToken()) return;
 
       let inc = 1;
       const {
@@ -145,7 +145,7 @@ export default {
     },
 
     handleStarClick() {
-      if (!checkToken(this.token)) return;
+      if (!checkToken()) return;
 
       let method = 'add';
       const {
@@ -181,8 +181,6 @@ export default {
   },
 
   computed: {
-    ...mapState('user', ['token']),
-
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
     }

@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapMutations, mapActions } from 'vuex';
 import UpdateToast from '@/components/UpdateToast';
 import AppFooter from '@/components/AppFooter';
 import { Loading } from 'element-ui';
@@ -47,25 +47,19 @@ export default {
   methods: {
     ...mapMutations('user', ['login']),
 
-    handleLogin() {
-      if (localStorage.getItem('openid') && localStorage.getItem('access_token')) {
-        login({
-          access_token: localStorage.getItem('access_token'),
-          openId: localStorage.getItem('openid')
-        }).then(({ data: { user, token } }) => {
-          localStorage.clear();
-          this.login({
-            user,
-            token
-          });
-        });
-      }
-    }
+    ...mapActions('user', ['saveLogin'])
   },
 
   mounted() {
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
+        window.loadingInstance = Loading.service({
+          lock: true,
+          text: '登录中',
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        });
+
         window.localStorage.setItem(
           'access_token',
           location.hash
@@ -74,9 +68,10 @@ export default {
             .shift()
         );
         window.localStorage.setItem('openid', openId);
+
         // 移动端登录
         if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
-          this.handleLogin();
+          this.saveLogin();
         }
       });
     }

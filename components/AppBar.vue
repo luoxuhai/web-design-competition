@@ -29,7 +29,7 @@
                 :command="index"
               >{{ item }}</el-dropdown-item>
               <el-dropdown-item>
-                <el-button @click="handleLogoutClick" type="danger" size="mini">退出登录</el-button>
+                <el-button @click="logout" type="danger" size="mini">退出登录</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import { MessageBox, Message, Loading } from 'element-ui';
 import UserDialog from './UserDialog';
 import { login, update } from '@/api/user';
@@ -81,6 +81,8 @@ export default {
 
   methods: {
     ...mapMutations('user', ['logout', 'login']),
+
+    ...mapActions('user', ['saveLogin']),
 
     handleShowDialogClick(e) {
       switch (e) {
@@ -115,18 +117,7 @@ export default {
           if (localStorage.getItem('openid') && localStorage.getItem('access_token')) {
             clearInterval(loginInterval);
             window.loginWin.close();
-            login({
-              access_token: localStorage.getItem('access_token'),
-              openId: localStorage.getItem('openid')
-            }).then(({ data: { user, token } }) => {
-              window.loadingInstance.close();
-              Message.success({ message: '登录成功!' });
-              localStorage.clear();
-              this.login({
-                user,
-                token
-              });
-            });
+            this.saveLogin();
           }
         }, 16);
       }
@@ -137,17 +128,6 @@ export default {
           process.env.NODE_ENV === 'development'
             ? 'http://127.0.0.1:3000/home'
             : 'https://open.furuzix.top/home'
-      });
-    },
-
-    handleLogoutClick() {
-      MessageBox.confirm('确认退出?', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning',
-        roundButton: true
-      }).then(() => {
-        this.logout();
       });
     }
   },

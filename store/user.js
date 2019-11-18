@@ -4,18 +4,18 @@
  */
 
 import { clearAllCookie } from '@/utils/utils';
+import { Message, MessageBox } from 'element-ui';
+import { login } from '@/api/user';
 
 export const state = () => {
     return {
-        user: localStorage.getItem('user')
-            ? JSON.parse(localStorage.getItem('user'))
-            : {},
+        user: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
         token: localStorage.getItem('token') || ''
     };
 };
 
 export const mutations = {
-    login(state, { user, token }) {
+    setUserData(state, { user, token }) {
         const newUser = { ...state.user, ...user };
         localStorage.setItem('user', JSON.stringify(newUser));
         localStorage.setItem('token', token);
@@ -24,11 +24,31 @@ export const mutations = {
     },
 
     logout(state) {
-        localStorage.clear();
-        clearAllCookie();
-        history.replaceState(null, null, '/home');
-        location.reload();
+        MessageBox.confirm('确认退出?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning',
+            roundButton: true
+        }).then(() => {
+            localStorage.clear();
+            clearAllCookie();
+            history.replaceState(null, null, '/home');
+            state = {};
+            location.reload();
+        });
+    }
+};
 
-        state = {};
+export const actions = {
+    saveLogin({ commit }) {
+        login({
+            access_token: localStorage.getItem('access_token'),
+            openId: localStorage.getItem('openid')
+        }).then(({ data: { user, token } }) => {
+            window.loadingInstance.close();
+            Message.success({ message: '登录成功!' });
+            localStorage.clear();
+            commit('setUserData', { user, token });
+        });
     }
 };

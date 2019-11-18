@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { createStore } from '@/.lavas/store';
 
 // const BASE_URL =
 //     process.env.NODE_ENV === 'development'
@@ -47,7 +48,8 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     config => {
-        config.headers.Authorization = `Bearer ${localStorage.getItem('token') || ''}`;
+        config.headers.Authorization = `Bearer ${createStore()._modules.root.state.user.token ||
+            ''}`;
         return config;
     },
     error => {

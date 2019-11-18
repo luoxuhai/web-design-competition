@@ -1,5 +1,6 @@
 import querystring from 'querystring';
 import url from 'url';
+import { createStore } from '@/.lavas/store';
 import { MessageBox } from 'element-ui';
 
 export const queryParse = _url => querystring.parse(url.parse(_url).query);
@@ -21,8 +22,8 @@ export function clearAllCookie() {
     }
 }
 
-export function checkToken(token) {
-    if (!token) {
+export function checkToken() {
+    if (!createStore()._modules.root.state.user.token) {
         MessageBox.confirm('请登录后操作!', '提示', {
             confirmButtonText: '确定',
             showCancelButton: false,
