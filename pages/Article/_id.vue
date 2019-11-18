@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { mapMutations } from 'vuex';
+import { mapState, mapMutations } from 'vuex';
 import AppBar from '@/components/AppBar';
 import Comment from '@/components/Comment';
 import Dayjs from 'dayjs';
@@ -99,7 +99,7 @@ export default {
       article: {},
       comments: [],
       qrcode: '',
-      words: 0,
+      words: '0000',
       isLike: false,
       isStar: false,
       asideVisible: true
@@ -107,6 +107,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations('app', ['saveArticles']),
+
     changeFadeAppbar() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop - 320;
@@ -124,19 +126,21 @@ export default {
       if (!checkToken()) return;
 
       let inc = 1;
-      const {
-        isLike,
-        article: { _id, like_count }
-      } = this;
+      const { isLike, article } = this;
+      const { _id, like_count } = article;
       if (!_id) return;
 
       if (isLike) inc = -1;
       this.isLike = !isLike;
-      this.$set(this.article, 'like_count', like_count + inc);
 
       like(_id, inc)
         .then(res => {
-          console.log(res);
+          this.saveArticles(
+            this.articles.map(e => {
+              if (e._id === _id) e.like_count = e.like_count + inc;
+              return e;
+            })
+          );
           Message.success({ message: inc === 1 ? '已点赞!' : '已取消点赞!' });
         })
         .catch(() => {
@@ -181,6 +185,8 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['articles']),
+
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
     }
@@ -188,10 +194,10 @@ export default {
 
   mounted() {
     const id = window.location.pathname.split('/')[2];
+    this.article = this.articles.filter(e => e._id === id)[0] || [];
     window.addEventListener('scroll', this.changeFadeAppbar);
 
     queryArticle(id).then(({ data }) => {
-      this.article = data;
       this.isLike = data.isLike;
       this.isStar = data.isStar;
       queryArticleContent(data.content_url).then(({ data }) => {
@@ -243,10 +249,11 @@ export default {
 
     &__cover {
       width: 700px;
+      min-height: 350px;
       max-height: 350px;
-      min-height: 330px;
       margin: -240px 10px 0 10px;
       border: none;
+      background-color: #eee;
     }
 
     &__title {
@@ -266,7 +273,8 @@ export default {
     }
 
     &__content {
-      min-height: 100px;
+      width: 100%;
+      min-height: 150px;
       margin: 50px 0;
     }
   }

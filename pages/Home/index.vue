@@ -17,6 +17,7 @@
 </template>
 
 <script>
+import { mapState, mapMutations } from 'vuex';
 import AppBar from '@/components/AppBar';
 import HomeIntro from '@/components/Home/HomeIntro';
 import HomeCourse from '@/components/Home/HomeCourse';
@@ -33,14 +34,13 @@ export default {
   },
   data() {
     return {
-      articles: [],
-      courses: [],
-      learner: [],
       opacity: 0
     };
   },
 
   methods: {
+    ...mapMutations('app', ['saveArticles', 'saveCourses', 'saveLearner']),
+
     changeFadeAppbar() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
@@ -49,6 +49,8 @@ export default {
   },
 
   computed: {
+    ...mapState('app', ['articles', 'courses', 'learner']),
+
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
     }
@@ -56,12 +58,12 @@ export default {
 
   mounted() {
     queryCourses().then(({ data: { courses, learner } }) => {
-      this.courses = courses;
-      this.learner = learner;
+      this.saveCourses(courses);
+      this.saveLearner(learner);
     });
 
     queryArticles().then(({ data }) => {
-      this.articles = data;
+      this.saveArticles(data);
     });
   },
 

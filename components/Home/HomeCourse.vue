@@ -68,10 +68,11 @@ export default {
 
   methods: {
     setScrollWidth() {
-      this.scrollWidth =
-        document.body.clientWidth -
-        document.getElementById('course-scroll').getBoundingClientRect().left +
-        'px';
+      if (document.getElementById('course-scroll'))
+        this.scrollWidth =
+          document.body.clientWidth -
+          document.getElementById('course-scroll').getBoundingClientRect().left +
+          'px';
     },
 
     changeResize() {

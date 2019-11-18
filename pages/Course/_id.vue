@@ -44,6 +44,7 @@ import { checkToken } from '@/utils/utils';
 import { queryCourse, addLearner, addBarrage, queryBarrage } from '@/api/course';
 
 let barrageInterval = null;
+let isUpdate = false;
 
 export default {
   components: {
@@ -61,6 +62,8 @@ export default {
   },
 
   methods: {
+    ...mapMutations('app', ['saveCourses', 'saveLearner']),
+
     changeFadeAppbar() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
       if (scrollTop < 150) this.opacity = scrollTop / 150;
@@ -108,11 +111,19 @@ export default {
           }
         }));
       });
+    },
+
+    handleAddLearner() {
+      addLearner(this.id).then(() => {
+        isUpdate = true;
+      });
     }
   },
 
   computed: {
-    ...mapState('user', ['token']),
+    ...mapState('user', ['token', 'user']),
+
+    ...mapState('app', ['courses', 'learner']),
 
     backgroundColor() {
       return `rgba(255, 255, 255, ${this.opacity})`;
@@ -158,7 +169,7 @@ export default {
     this.player.once('play', () => {
       if (this.token)
         // 延时5秒加入课程
-        setTimeout(() => addLearner(this.id), 5000);
+        setTimeout(this.handleAddLearner, 5000);
     });
 
     this.player.on('pause', () => {
@@ -176,6 +187,25 @@ export default {
     this.player.on('playing', () => {
       barrageInterval = setInterval(this.getBarrage, 2000);
     });
+  },
+
+  beforeDestroy() {
+    const { id, user, courses, learner, saveLearner, saveCourses } = this;
+    if (isUpdate) {
+      saveLearner([user, ...learner.filter(({ openId }) => openId !== user.openId)].slice(0, 3));
+      saveCourses(
+        courses.map(e => {
+          if (e._id === id) {
+            e.learner = [user, ...e.learner.filter(({ openId }) => openId !== user.openId)].slice(
+              0,
+              4
+            );
+          }
+          return e;
+        })
+      );
+    }
+    isUpdate = false;
   },
 
   destroyed() {
