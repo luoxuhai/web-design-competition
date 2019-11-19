@@ -200,6 +200,7 @@ export default {
     queryArticle(id).then(({ data }) => {
       this.isLike = data.isLike;
       this.isStar = data.isStar;
+      this.article = data;
       queryArticleContent(data.content_url).then(({ data }) => {
         this.$set(this.article, 'content', data);
         this.$nextTick(() => {

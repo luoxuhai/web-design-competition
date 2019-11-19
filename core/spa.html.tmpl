@@ -14,8 +14,6 @@
         <meta name="apple-mobile-web-app-status-bar-style" content="black">
         <link rel="apple-touch-icon" href="<<= htmlWebpackPlugin.options.config.build.publicPath >>static/img/icons/apple-touch-icon.png">
         <meta name="app-mobile-web-app-title" content="大国之窗">
-        <script type="text/javascript" src="https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/qc-1.0.1.js" 
-    data-appid="101816819" charset="utf-8"></script>
         << for (var jsFilePath of htmlWebpackPlugin.files.js) { >>
             <link rel="preload" href="<<= jsFilePath >>" as="script">
         << } >>
@@ -37,5 +35,7 @@
     </head>
     <body>
         <div id="app"></div>
+    <script type="text/javascript" src="https://ito.oss-cn-beijing.aliyuncs.com/web-design-competition/qc-1.0.1.js" 
+    data-appid="101816819" charset="utf-8"></script>
     </body>
 </html>

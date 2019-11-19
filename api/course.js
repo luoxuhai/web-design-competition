@@ -18,3 +18,8 @@ export const addLearner = id =>
     request(`/v1/courses/learner/${id}`, {
         method: 'put'
     });
+
+export const removeLearner = id =>
+    request(`/v1/courses/learning/${id}`, {
+        method: 'delete'
+    });

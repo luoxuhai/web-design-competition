@@ -8,7 +8,10 @@ export const state = () => {
         isStartLearn: false,
         articles: [],
         courses: [],
-        learner: []
+        learner: [],
+        isMobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(
+            navigator.userAgent
+        )
     };
 };
 

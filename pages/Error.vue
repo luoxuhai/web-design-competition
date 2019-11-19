@@ -1,6 +1,6 @@
 <template>
   <div class="page-error">
-    <p>{{ message }}</p>
+    <h1>{{ message }}</h1>
   </div>
 </template>
 
@@ -9,7 +9,7 @@ export default {
   name: "error",
   computed: {
     message() {
-      return this.$route.params.error || "您访问的路径不存在";
+      return this.$route.params.error || "您访问的页面不存在!";
     }
   },
   created() {
@@ -23,3 +23,14 @@ export default {
   }
 };
 </script>
+
+<style lang="scss">
+  .page-error {
+    h1 {
+      text-align: center;
+      font-size: 28px;
+      line-height: 2;
+      font-weight: bold;
+    }
+  }
+</style>

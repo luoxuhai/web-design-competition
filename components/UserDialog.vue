@@ -9,7 +9,12 @@
     :before-close="handleClose"
   >
     <ul v-if="type === 'star'" class="article-list" v-loading="!loaded">
-      <li class="article-item" v-for="item of stars" :key="item._id">
+      <li
+        class="article-item"
+        v-for="item of stars"
+        @click="handleToDetailClick(item._id, item.title)"
+        :key="item._id"
+      >
         <el-image
           style="width: 80px; height: 80px"
           :src="item.cover && item.cover + '?x-oss-process=style/xs'"
@@ -26,12 +31,24 @@
             {{ item.views_count }}
           </span>
         </footer>
-        <el-button class="romove-button" type="danger" size="small" icon="el-icon-delete" circle />
+        <el-button
+          class="romove-button"
+          @click.stop="handleRemoveStarClick(item._id)"
+          type="danger"
+          size="small"
+          icon="el-icon-delete"
+          circle
+        />
       </li>
       <li v-if="!stars.length">没有内容</li>
     </ul>
     <ul v-else class="course-list" v-loading="!loaded">
-      <li class="course-item" v-for="item of learning" :key="item._id">
+      <li
+        class="course-item"
+        v-for="item of learning"
+        @click="handleToDetailClick(item._id, item.title)"
+        :key="item._id"
+      >
         <div class="course-info">
           <h2 class="course-title">{{ item.title }}</h2>
           <p class="course-author">{{ item.author.name }}</p>
@@ -39,7 +56,14 @@
         <footer class="course-footer">
           <course-learner :learner="item.learner" :learner_count="item.learner_count" />
         </footer>
-        <el-button class="romove-button" type="danger" size="small" icon="el-icon-delete" circle />
+        <el-button
+          class="romove-button"
+          @click.stop="handleRemoveLearner(item._id)"
+          type="danger"
+          size="small"
+          icon="el-icon-delete"
+          circle
+        />
       </li>
       <li v-if="!learning.length">没有内容</li>
     </ul>
@@ -50,9 +74,19 @@
 </template>
 
 <script>
+import { Message, MessageBox } from 'element-ui';
 import CourseLearner from '@/components/CourseLearner';
-import { queryStars } from '@/api/article';
-import { queryLearning } from '@/api/course';
+import { queryStars, star } from '@/api/article';
+import { queryLearning, removeLearner } from '@/api/course';
+
+function messageBox(title) {
+  return MessageBox.confirm(title, '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning',
+    roundButton: true
+  });
+}
 
 export default {
   components: {
@@ -71,6 +105,55 @@ export default {
   },
 
   methods: {
+    handleRemoveStarClick(id) {
+      messageBox('确认取消收藏?')
+        .then(() => {
+          star(id, 'remove')
+            .then(res => {
+              this.stars = this.stars.filter(({ _id }) => _id !== id);
+              Message.success({
+                message: '已取消收藏!'
+              });
+            })
+            .catch(() => {
+              Message.error({ message: '操作失败!' });
+            });
+        })
+        .catch(() => {});
+    },
+
+    handleRemoveLearner(id) {
+      messageBox('确认取消学习?')
+        .then(() => {
+          removeLearner(id)
+            .then(res => {
+              this.learning = this.learning.filter(({ _id }) => _id !== id);
+              Message.success({
+                message: '已取消学习!'
+              });
+            })
+            .catch(() => {
+              Message.error({ message: '操作失败!' });
+            });
+        })
+        .catch(() => {});
+    },
+
+    handleToDetailClick(id, title) {
+      let name = 'courseId';
+
+      if (this.type === 'star') name = 'articleId';
+      this.handleClose();
+
+      setTimeout(() => {
+        this.$router.push({
+          name,
+          params: { id },
+          query: { title }
+        });
+      }, 100);
+    },
+
     handleShowDialog(type) {
       this.type = type;
       this.changeDialogWidth();
@@ -117,6 +200,8 @@ export default {
     align-items: center;
     min-width: 500px;
     padding: 10px;
+    transition: background-color 0.3s;
+    cursor: pointer;
 
     &:hover {
       background-color: lighten(#f9320c, 43%);

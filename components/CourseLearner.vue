@@ -2,16 +2,9 @@
   <div class="learning">
     <ul class="learning-list">
       <li class="learning-item" v-for="item of learner" :key="item._id">
-        <el-tooltip effect="dark" :content="item.nickname" placement="top">
-          <el-avatar
-            class="intro__toplearn-avatar"
-            :src="item.avatar"
-            @error="() => true"
-            :size="30"
-          >
-            <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-          </el-avatar>
-        </el-tooltip>
+        <el-avatar class="intro__toplearn-avatar" :src="item.avatar" @error="() => true" :size="30">
+          <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+        </el-avatar>
       </li>
     </ul>
     {{ learner_count }} 人学习中

@@ -5,6 +5,16 @@
     </keep-alive>
     <app-footer v-show="$route.name" />
     <update-toast />
+    <el-tooltip effect="dark" content="返回" placement="top-start">
+      <el-button
+        v-show="!/(\/|home)/.test($route.name)"
+        class="back-button"
+        @click="$router.back();"
+        type="primary"
+        icon="el-icon-d-arrow-left"
+        circle
+      />
+    </el-tooltip>
     <el-backtop style="width: 50px; height: 50px;">
       <i style="font-size: 30px" class="el-icon-caret-top" />
     </el-backtop>
@@ -12,7 +22,7 @@
 </template>
 
 <script>
-import { mapMutations, mapActions } from 'vuex';
+import { mapState, mapMutations, mapActions } from 'vuex';
 import UpdateToast from '@/components/UpdateToast';
 import AppFooter from '@/components/AppFooter';
 import { Loading } from 'element-ui';
@@ -28,6 +38,7 @@ export default {
     AppFooter
   },
   computed: {
+    ...mapState('app', ['isMobile']),
     // https://github.com/lavas-project/lavas/issues/119
     routerViewKey() {
       let { name, params } = this.$route;
@@ -67,12 +78,11 @@ export default {
             .split('&')
             .shift()
         );
+        location.hash = '';
         window.localStorage.setItem('openid', openId);
 
         // 移动端登录
-        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|Windows Phone/i.test(navigator.userAgent)) {
-          this.saveLogin();
-        }
+        if (this.isMobile) this.saveLogin();
       });
     }
   }
@@ -88,6 +98,16 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.back-button {
+  position: fixed;
+  right: 40px;
+  bottom: 110px;
+  z-index: 2000;
+  width: 50px;
+  height: 50px;
+  font-size: 20px;
 }
 
 .scroll-bar {

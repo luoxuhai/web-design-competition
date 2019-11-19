@@ -22,8 +22,12 @@ export const mutations = {
         const newUser = { ...state.user, ...user };
         localStorage.setItem('user', JSON.stringify(newUser));
         localStorage.setItem('token', token);
-        Cookies.setJSON('user', newUser);
-        Cookies.set('token', token);
+        try {
+            Cookies.setJSON('user', newUser);
+            Cookies.set('token', token);
+        } catch (e) {
+            console.error(e);
+        }
         state.token = token;
         state.user = newUser;
     },
@@ -40,7 +44,7 @@ export const mutations = {
             history.replaceState(null, null, '/home');
             state = {};
             location.reload();
-        });
+        }).catch(() => {})
     }
 };
 

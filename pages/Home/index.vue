@@ -68,6 +68,7 @@ export default {
   },
 
   activated() {
+    this.changeFadeAppbar();
     window.addEventListener('scroll', this.changeFadeAppbar);
   },
 

@@ -3,20 +3,26 @@
     <nav class="appbar__wrapper">
       <ul class="appbar__wrapper-list">
         <el-tooltip effect="dark" content="大国之窗">
-          <li class="logo" @click="handleBack">
-            <img
-              class="logo__image"
-              src="../static/img/icons/android-chrome-512x512.png"
-              alt="大国之窗logo"
-            />
-            <h1 class="logo__title">大国之窗</h1>
+          <li class="logo">
+            <a href="/">
+              <img
+                class="logo__image"
+                src="../static/img/icons/android-chrome-512x512.png"
+                alt="大国之窗logo"
+              />
+              <h1 class="logo__title">大国之窗</h1>
+            </a>
           </li>
         </el-tooltip>
         <li class="title">
           <slot />
         </li>
         <li class="user">
-          <el-dropdown v-if="token" @command="handleShowDialogClick">
+          <el-dropdown
+            v-if="token"
+            @command="handleShowDialogClick"
+            :trigger="isMobile ? 'click' : 'hover'"
+          >
             <el-avatar class="user__avatar" @error="() => true" :size="40" :src="user.avatar">
               <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a2568361 7711png.png" />
             </el-avatar>
@@ -26,8 +32,8 @@
                 :key="item"
                 :command="index"
               >{{ item }}</el-dropdown-item>
-              <el-dropdown-item>
-                <el-button @click="logout" type="danger" size="mini">退出登录</el-button>
+              <el-dropdown-item :command="3">
+                <el-button type="danger" size="mini">退出登录</el-button>
               </el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
@@ -83,6 +89,9 @@ export default {
     ...mapActions('user', ['saveLogin']),
 
     handleBack() {
+      this.$router.replace({ name: 'home' });
+      location.reload();
+      return;
       if (this.$route.name === 'home') location.reload();
       else this.$router.back();
     },
@@ -97,6 +106,9 @@ export default {
           break;
         case 2:
           this.$refs.userDialog.handleShowDialog('course');
+          break;
+        case 3:
+          this.logout();
       }
     },
 
@@ -122,7 +134,7 @@ export default {
             window.loginWin.close();
             this.saveLogin();
           }
-        }, 16);
+        }, 10);
       }
 
       window.loginWin = QC.Login.showPopup({
@@ -136,7 +148,9 @@ export default {
   },
 
   computed: {
-    ...mapState('user', ['token', 'user'])
+    ...mapState('user', ['token', 'user']),
+
+    ...mapState('app', ['isMobile'])
   }
 };
 </script>
@@ -164,7 +178,11 @@ export default {
         display: flex;
         align-items: center;
         flex-shrink: 0;
-        cursor: pointer;
+        a {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+        }
 
         &__image {
           width: 35px;
