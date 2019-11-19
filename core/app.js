@@ -27,7 +27,10 @@ import {
 } from 'element-ui';
 import avatar from 'vue-avatar';
 import ScrollReveal from 'scrollreveal';
+import fastclick from 'fastclick';
 import AppBar from '@/components/AppBar';
+
+fastclick.attach(document.body);
 
 const scrollReveal = ScrollReveal({
     reset: true, // 滚动鼠标时，动画开关
