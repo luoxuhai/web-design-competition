@@ -1,5 +1,5 @@
 <template>
-  <transition name="slide">
+  <transition name="fadeIn">
     <div v-show="isShow" class="article">
       <app-bar
         class="appbar"
@@ -138,9 +138,10 @@ export default {
 
       like(_id, inc)
         .then(res => {
+          this.$set(this.article, 'like_count', like_count + inc);
           this.saveArticles(
             this.articles.map(e => {
-              if (e._id === _id) e.like_count = e.like_count + inc;
+              if (e._id === _id) e.like_count = like_count + inc;
               return e;
             })
           );

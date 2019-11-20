@@ -8,6 +8,20 @@
  * Copyright (c) 2019 Daniel Eden
  */
 
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fadeIn-enter-active {
+    animation: fadeIn 0.5s;
+}
+
 @keyframes bounceInRight {
     from,
     60%,
@@ -97,7 +111,7 @@
 }
 
 .bounce-enter-active {
-    animation: bounce 0.3s;
+    animation: bounce 0.6s;
     -webkit-transform-origin: center bottom;
     transform-origin: center bottom;
 }
