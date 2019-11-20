@@ -1,7 +1,9 @@
 <template>
   <div class="intro">
     <section class="intro__wrapper">
-      <h2 class="intro__title">推动中国发展的优秀思想理论集</h2>
+      <transition name="bounce">
+        <h2 v-show="isShow" class="intro__title">推动中国发展的优秀思想理论集</h2>
+      </transition>
       <hr class="divider" />
       <small class="intro__sub">中国共产党以马克思列宁主义、毛泽东思想、邓小平理论、“三个代表”重要思想和科学发展观作为自己的行动指南</small>
       <el-button
@@ -40,6 +42,12 @@ export default {
     learner: Array
   },
 
+  data() {
+    return {
+      isShow: false
+    };
+  },
+
   methods: {
     ...mapMutations('app', ['toggleStartLearn']),
 
@@ -60,6 +68,14 @@ export default {
 
   computed: {
     ...mapState('app', ['isStartLearn'])
+  },
+
+  mounted() {
+    this.$nextTick(() => {
+      setTimeout(() => {
+        this.isShow = true;
+      }, 60);
+    });
   }
 };
 </script>

@@ -1,36 +1,38 @@
 <template>
-  <div class="course">
-    <app-bar
-      :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
-      class="appbar"
-      :isDark="true"
-    >{{course.title}}</app-bar>
-    <div class="course__wrapper">
-      <div class="course__wrapper-video">
-        <section-title>视频课程</section-title>
-        <div id="player" />
-        <div class="course__barrage-container">
-          <el-input
-            type="textarea"
-            v-model="barrage"
-            :autosize="{ minRows: 2, maxRows: 4}"
-            placeholder="请输入弹幕"
-          ></el-input>
-          <el-button
-            class="course__barrage-submit"
-            @click="handleSendBarrageClick"
-            type="primary"
-            round
-            icon="el-icon-s-promotion"
-          >发送</el-button>
+  <transition name="slide">
+    <div v-show="isShow" class="course">
+      <app-bar
+        :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
+        class="appbar"
+        :isDark="true"
+      >{{course.title}}</app-bar>
+      <div class="course__wrapper">
+        <div class="course__wrapper-video">
+          <section-title>视频课程</section-title>
+          <div id="player" />
+          <div class="course__barrage-container">
+            <el-input
+              type="textarea"
+              v-model="barrage"
+              :autosize="{ minRows: 2, maxRows: 4}"
+              placeholder="请输入弹幕"
+            ></el-input>
+            <el-button
+              class="course__barrage-submit"
+              @click="handleSendBarrageClick"
+              type="primary"
+              round
+              icon="el-icon-s-promotion"
+            >发送</el-button>
+          </div>
+        </div>
+        <div class="course__wrapper-chat">
+          <section-title>课程讨论</section-title>
+          <chat-room :courseId="course._id" />
         </div>
       </div>
-      <div class="course__wrapper-chat">
-        <section-title>课程讨论</section-title>
-        <chat-room :courseId="course._id" />
-      </div>
     </div>
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -56,7 +58,8 @@ export default {
       id: '',
       opacity: 0,
       course: {},
-      barrage: ''
+      barrage: '',
+      isShow: false
     };
   },
 
@@ -142,6 +145,7 @@ export default {
   },
 
   mounted() {
+    this.isShow = true;
     this.id = window.location.pathname.split('/')[2];
     window.addEventListener('scroll', this.changeFadeAppbar);
 

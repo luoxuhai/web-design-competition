@@ -1,74 +1,76 @@
 <template>
-  <div class="article">
-    <app-bar
-      class="appbar"
-      :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
-      :isDark="true"
-    >
-      <transition name="el-zoom-in-top">
-        <div v-show="opacity === 1" class="transition-box">{{article.title}}</div>
-      </transition>
-    </app-bar>
-    <div class="article__wrapper">
-      <article id="article" class="main">
-        <img
-          class="main__cover"
-          :src="article.cover && article.cover + '?x-oss-process=style/fade'"
-          :alt="article.title"
-          :title="article.title"
-        />
-        <h1 class="main__title">{{article.title}}</h1>
-        <section class="main__info">
-          <time class="main__info-date">
-            <i class="icon iconshijian" />
-            {{article.createdAt | formatDate}}
-          </time>
-          <span class="main__info-words">字数 {{words}}</span>
-          <span class="main__info-views">阅读 {{article.views_count}}</span>
-          <span class="main__info-likes">点赞 {{article.like_count}}</span>
-        </section>
-        <div class="main__content" v-loading="!article.content" v-html="article.content" />
-      </article>
-      <transition name="el-zoom-in-top">
-        <aside v-show="asideVisible" class="aside">
-          <div class="aside__item like">
-            <el-tooltip effect="dark" content="点赞" placement="right-start">
+  <transition name="slide">
+    <div v-show="isShow" class="article">
+      <app-bar
+        class="appbar"
+        :style="{backgroundColor, boxShadow: opacity === 1 ? '0 2px 6px 0 rgba(0, 0, 0, 0.12)' : ''}"
+        :isDark="true"
+      >
+        <transition name="el-zoom-in-top">
+          <div v-show="opacity === 1" class="transition-box">{{article.title}}</div>
+        </transition>
+      </app-bar>
+      <div class="article__wrapper">
+        <article id="article" class="main">
+          <img
+            class="main__cover"
+            :src="article.cover && article.cover + '?x-oss-process=style/fade'"
+            :alt="article.title"
+            :title="article.title"
+          />
+          <h1 class="main__title">{{article.title}}</h1>
+          <section class="main__info">
+            <time class="main__info-date">
+              <i class="icon iconshijian" />
+              {{article.createdAt | formatDate}}
+            </time>
+            <span class="main__info-words">字数 {{words}}</span>
+            <span class="main__info-views">阅读 {{article.views_count}}</span>
+            <span class="main__info-likes">点赞 {{article.like_count}}</span>
+          </section>
+          <div class="main__content" v-loading="!article.content" v-html="article.content" />
+        </article>
+        <transition name="el-zoom-in-top">
+          <aside v-show="asideVisible" class="aside">
+            <div class="aside__item like">
+              <el-tooltip effect="dark" content="点赞" placement="right-start">
+                <i
+                  class="icon"
+                  :class="isLike ? 'iconheart-fill' : 'iconheart'"
+                  @click="handleLikeClick"
+                />
+              </el-tooltip>
+            </div>
+            <span class="like-count">{{article.like_count || 0}}</span>
+            <a style="text-decoration: none; color: inherit" href="#comment">
+              <el-tooltip effect="dark" content="评论" placement="right-start">
+                <i class="icon iconcomment" />
+              </el-tooltip>
+            </a>
+            <span class="comment-count">{{comments ? comments.length : 0}}</span>
+            <el-tooltip effect="dark" content="收藏" placement="right-start">
               <i
                 class="icon"
-                :class="isLike ? 'iconheart-fill' : 'iconheart'"
-                @click="handleLikeClick"
+                :class="isStar ? 'iconstar-fill' : 'iconstar'"
+                @click="handleStarClick"
               />
             </el-tooltip>
-          </div>
-          <span class="like-count">{{article.like_count || 0}}</span>
-          <a style="text-decoration: none; color: inherit" href="#comment">
-            <el-tooltip effect="dark" content="评论" placement="right-start">
-              <i class="icon iconcomment" />
-            </el-tooltip>
-          </a>
-          <span class="comment-count">{{comments ? comments.length : 0}}</span>
-          <el-tooltip effect="dark" content="收藏" placement="right-start">
-            <i
-              class="icon"
-              :class="isStar ? 'iconstar-fill' : 'iconstar'"
-              @click="handleStarClick"
-            />
-          </el-tooltip>
-          <el-popover
-            style="margin-top: 20px"
-            placement="top-start"
-            title="扫码分享"
-            width="150"
-            trigger="hover"
-          >
-            <img style="width: 100%" :src="qrcode" alt="二维码" />
-            <i class="icon iconshare" @mouseenter="getQrcodeMouseenter" slot="reference" />
-          </el-popover>
-        </aside>
-      </transition>
+            <el-popover
+              style="margin-top: 20px"
+              placement="top-start"
+              title="扫码分享"
+              width="150"
+              trigger="hover"
+            >
+              <img style="width: 100%" :src="qrcode" alt="二维码" />
+              <i class="icon iconshare" @mouseenter="getQrcodeMouseenter" slot="reference" />
+            </el-popover>
+          </aside>
+        </transition>
+      </div>
+      <comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
     </div>
-    <comment id="comment" class="comment" :articleId="article._id" :comments="comments" />
-  </div>
+  </transition>
 </template>
 
 <script>
@@ -102,7 +104,8 @@ export default {
       words: '0000',
       isLike: false,
       isStar: false,
-      asideVisible: true
+      asideVisible: true,
+      isShow: false
     };
   },
 
@@ -195,6 +198,9 @@ export default {
   mounted() {
     const id = window.location.pathname.split('/')[2];
     this.article = this.articles.filter(e => e._id === id)[0] || [];
+    this.$nextTick(() => {
+      this.isShow = true;
+    });
     window.addEventListener('scroll', this.changeFadeAppbar);
 
     queryArticle(id).then(({ data }) => {
