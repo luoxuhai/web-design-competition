@@ -1,35 +1,42 @@
 <template>
   <div class="intro">
     <section class="intro__wrapper">
-      <transition name="bounce">
+      <transition name="bounceInDown">
         <h2 v-show="isShow" class="intro__title">推动中国发展的优秀思想理论集</h2>
       </transition>
+      <div v-if="!isShow" style="height: 140px" />
       <hr class="divider" />
       <small class="intro__sub">中国共产党以马克思列宁主义、毛泽东思想、邓小平理论、“三个代表”重要思想和科学发展观作为自己的行动指南</small>
-      <el-button
-        class="intro__button"
-        :class="[!isStartLearn && 'hvr-ripple-out']"
-        @click="handleStartLearnClick"
-        :loading="isStartLearn"
-      >
-        {{isStartLearn ? '请稍等' : '开始学习'}}
-        <i class="icon iconarrowright" />
-      </el-button>
+      <transition name="bounceInLeft">
+        <el-button
+          v-show="isShow"
+          class="intro__button"
+          :class="[!isStartLearn && 'hvr-ripple-out']"
+          @click="handleStartLearnClick"
+          :loading="isStartLearn"
+        >
+          {{isStartLearn ? '请稍等' : '开始学习'}}
+          <i class="icon iconarrowright" />
+        </el-button>
+      </transition>
+      <div v-if="!isShow" style="height: 140px" />
       <section class="intro__toplearn">
         <h3 class="intro__toplearn-title">最近学习</h3>
-        <ul class="intro__toplearn-list">
-          <li class="intro__toplearn-item" v-for="item of learner" :key="item._id">
-            <el-avatar
-              class="intro__toplearn-avatar"
-              :src="item.avatar"
-              @error="() => true"
-              :size="30"
-            >
-              <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
-            </el-avatar>
-            <p class="intro__toplearn-username">{{item.nickname}}</p>
-          </li>
-        </ul>
+        <transition name="bounceIn">
+          <ul v-show="learner.length" class="intro__toplearn-list">
+            <li class="intro__toplearn-item" v-for="item of learner" :key="item._id">
+              <el-avatar
+                class="intro__toplearn-avatar"
+                :src="item.avatar"
+                @error="() => true"
+                :size="30"
+              >
+                <img src="https://cube.elemecdn.com/e/fd/0fc7d20532fdaf769a25683617711png.png" />
+              </el-avatar>
+              <p class="intro__toplearn-username">{{item.nickname}}</p>
+            </li>
+          </ul>
+        </transition>
       </section>
     </section>
   </div>

@@ -9,7 +9,7 @@
       <el-button
         v-show="!/(\/|home)/.test($route.name)"
         class="back-button"
-        @click="$router.back();"
+        @click="handleBack"
         type="primary"
         icon="el-icon-d-arrow-left"
         circle
@@ -58,7 +58,12 @@ export default {
   methods: {
     ...mapMutations('user', ['login']),
 
-    ...mapActions('user', ['saveLogin'])
+    ...mapActions('user', ['saveLogin']),
+
+    handleBack() {
+      if (location.hash) this.$router.back();
+      this.$router.back();
+    }
   },
 
   mounted() {
