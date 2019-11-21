@@ -100,14 +100,14 @@ export default {
   watch: {
     courses(val, old) {
       if (val.length !== old.length)
-        this.$scrollReveal.reveal('.course__wrapper', { reset: false, delay: 0, duration: 300 });
+        this.$scrollReveal.reveal('.course__wrapper', { reset: false, delay: 0, duration: 450 });
       // 避免动画开始前闪烁
       setTimeout(() => {
         this.newCourses = val;
         this.$nextTick(() => {
           this.changeResize();
         });
-      });
+      }, 16);
     },
 
     isStartLearn(val) {

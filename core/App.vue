@@ -15,8 +15,11 @@
         circle
       />
     </el-tooltip>
+
     <el-backtop style="width: 50px; height: 50px;">
-      <i style="font-size: 30px" class="el-icon-caret-top" />
+      <el-tooltip effect="dark" content="回到顶部" placement="top-end">
+        <i style="font-size: 30px" class="el-icon-caret-top" />
+      </el-tooltip>
     </el-backtop>
   </div>
 </template>

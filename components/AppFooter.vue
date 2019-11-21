@@ -13,13 +13,13 @@
     <div class="flex-container">
       <div class="flex-item">
         <p>友情链接</p>
-        <a href="http://theory.people.com.cn/GB/179412/" target="_blank">马克思主义学习网</a>
-        <a href="http://www.gov.cn/" target="_blank">中国政府网</a>
-        <a href="http://cpc.people.com.cn/" target="_blank">中国共产党新闻网</a>
+        <a href="http://theory.people.com.cn/GB/179412/" target="_blank" title="马克思主义学习网">马克思主义学习网</a>
+        <a href="http://www.gov.cn/" target="_blank" title="中国政府网">中国政府网</a>
+        <a href="http://cpc.people.com.cn/" target="_blank" title="中国共产党新闻网">中国共产党新闻网</a>
       </div>
       <div class="flex-item">
         <p>更多</p>
-        <a href="mailto:xxxx@163.com">建议反馈</a>
+        <a href="mailto:xxxx@163.com" title="邮件反馈">建议反馈</a>
         <a slot="reference" href="javascript:void(0)" @click="dialogVisible = !dialogVisible">微信扫一扫</a>
       </div>
       <div class="flex-item">
@@ -38,6 +38,7 @@
             class="weiboLink"
             href="https://weibo.com/6383622181/profile?topnav=1&wvr=6&is_all=1 "
             target="_blank"
+            title="微博"
           >
             <img src="../static/img/icons/weibo.png" alt="微博图标" />
           </a>

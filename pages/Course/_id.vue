@@ -99,7 +99,8 @@ export default {
         });
 
         addBarrage({ courseId: id, barrage });
-      } else this.barrage = '';
+      }
+      this.barrage = '';
     },
 
     getBarrage() {
@@ -205,6 +206,7 @@ export default {
   },
 
   destroyed() {
+    this.player.destroy();
     window.removeEventListener('scroll', this.changeFadeAppbar);
     clearInterval(barrageInterval);
   }
