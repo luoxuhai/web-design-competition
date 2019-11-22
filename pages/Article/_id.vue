@@ -237,14 +237,14 @@ export default {
 }
 .article {
   padding-bottom: 200px;
-  background-color: #f4f4f4;
+  background-color: var(--color-background-dark);
 
   &__wrapper {
     display: flex;
     justify-content: center;
     margin-top: 240px;
     padding: 0 10px;
-    background-color: #fff;
+    background-color: var(--color-background);
   }
 
   .main {
@@ -284,6 +284,9 @@ export default {
       width: 100%;
       min-height: 150px;
       margin: 50px 0;
+      section {
+        color: var(--color-content) !important;
+      }
     }
   }
 

@@ -15,7 +15,7 @@
         circle
       />
     </el-tooltip>
-
+    <div v-show="nightMode" class="darken" />
     <el-backtop style="width: 50px; height: 50px;">
       <el-tooltip effect="dark" content="回到顶部" placement="top-end">
         <i style="font-size: 30px" class="el-icon-caret-top" />
@@ -41,7 +41,7 @@ export default {
     AppFooter
   },
   computed: {
-    ...mapState('app', ['isMobile']),
+    ...mapState('app', ['isMobile', 'nightMode']),
     // https://github.com/lavas-project/lavas/issues/119
     routerViewKey() {
       let { name, params } = this.$route;
@@ -61,6 +61,8 @@ export default {
   methods: {
     ...mapMutations('user', ['login']),
 
+    ...mapMutations('app', ['toggleNightMode']),
+
     ...mapActions('user', ['saveLogin']),
 
     handleBack() {
@@ -70,6 +72,9 @@ export default {
   },
 
   mounted() {
+    console.log(this.nightMode);
+    this.toggleNightMode(this.nightMode);
+
     if (QC.Login.check()) {
       QC.Login.getMe(openId => {
         window.loadingInstance = Loading.service({
@@ -105,7 +110,19 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: var(--color-default);
+}
+
+.darken {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 99999;
+  mix-blend-mode: darken;
+  background-color: rgba(0, 0, 0, 0.2);
+  pointer-events: none;
 }
 
 .back-button {

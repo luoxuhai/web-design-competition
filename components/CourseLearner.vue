@@ -29,7 +29,7 @@ export default {
   display: flex;
   align-items: center;
   font-size: 14px;
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--color-title-light);
 
   &-list {
     display: flex;

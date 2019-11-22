@@ -133,7 +133,7 @@ export default {
         display: inline-block;
         font-size: 15px;
         line-height: 20px;
-        color: #241c1c;
+        color: var(--color-sub);
       }
     }
   }
@@ -147,7 +147,7 @@ export default {
     box-sizing: border-box;
 
     &:first-child {
-      background: #fff;
+      background-color: var(--color-background);
       min-height: 300px;
     }
 
@@ -166,7 +166,7 @@ export default {
       @include ellipsis(2);
       min-height: 30px;
       margin-bottom: 15px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--color-title-light);
       font-weight: bold;
       font-size: 20px;
       line-height: 1.3;
@@ -201,7 +201,7 @@ export default {
       transition: all 0.2s;
       border-radius: 4px;
       border: transparent solid 1px;
-      background-color: #fff;
+      background-color: var(--color-background);
       overflow: hidden;
       color: inherit;
       text-decoration: none;
@@ -215,7 +215,7 @@ export default {
 
         .achievement__item-title,
         .achievement__item-footer {
-          color: #241c1c;
+          color: var(--color-title);
         }
       }
     }

@@ -158,28 +158,20 @@ export default {
 <style lang='scss' scoped>
 .hvr-ripple-out:before {
   content: '';
-  border: #ffffff solid 6px;
+  border: var(--color-background) solid 6px;
   border-radius: 15px;
 }
 
 .hvr-bob-ripple-hover {
-  -webkit-animation-name: hvr-bob-float, hvr-bob;
   animation-name: hvr-bob-float, hvr-bob;
-  -webkit-animation-duration: 0.3s, 1.5s;
   animation-duration: 0.3s, 1.5s;
-  -webkit-animation-delay: 0s, 0.3s;
   animation-delay: 0s, 0.3s;
-  -webkit-animation-timing-function: ease-out, ease-in-out;
   animation-timing-function: ease-out, ease-in-out;
-  -webkit-animation-iteration-count: 1, infinite;
   animation-iteration-count: 1, infinite;
-  -webkit-animation-fill-mode: forwards;
   animation-fill-mode: forwards;
-  -webkit-animation-direction: normal, alternate;
   animation-direction: normal, alternate;
 
   &.hvr-ripple-out:before {
-    -webkit-animation-name: hvr-ripple-out;
     animation-name: hvr-ripple-out;
   }
 }
@@ -280,7 +272,7 @@ export default {
     margin-right: 40px;
     padding: 20px 15px;
     border-radius: 10px;
-    background-color: #fff;
+    background-color: var(--color-background);
     cursor: pointer;
     background-size: contain;
     background-repeat: no-repeat;

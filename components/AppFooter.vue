@@ -76,7 +76,7 @@ export default {
   justify-content: center;
   align-items: center;
   margin-top: auto;
-  background-color: #f4f4f4;
+  background-color: var(--color-background-dark);
   color: #8c8c8c;
 
   .footer-copyright {
@@ -94,7 +94,7 @@ export default {
     display: flex;
     flex-wrap: wrap;
     width: 100%;
-    background-color: #f4f4f4;
+    background-color: var(--color-background-dark);
   }
   .flex-item:last-child {
     div {

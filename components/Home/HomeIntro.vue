@@ -4,7 +4,7 @@
       <transition name="bounceInDown">
         <h2 v-show="isShow" class="intro__title">推动中国发展的优秀思想理论集</h2>
       </transition>
-      <div v-if="!isShow" style="height: 140px" />
+      <div v-if="!isShow" :style="{height: isMobile ? '209px' : '140px'}" />
       <hr class="divider" />
       <small class="intro__sub">中国共产党以马克思列宁主义、毛泽东思想、邓小平理论、“三个代表”重要思想和科学发展观作为自己的行动指南</small>
       <transition name="bounceInLeft">
@@ -74,7 +74,7 @@ export default {
   },
 
   computed: {
-    ...mapState('app', ['isStartLearn'])
+    ...mapState('app', ['isStartLearn', 'isMobile'])
   },
 
   mounted() {
@@ -119,7 +119,7 @@ export default {
   min-width: 300px;
   padding-top: 120px;
   padding-left: 10px;
-  background-color: #fff;
+  background-color: var(--color-background);
 
   &__wrapper {
     width: 300px;
@@ -157,7 +157,7 @@ export default {
     width: 280px;
     font-size: 15px;
     line-height: 20px;
-    color: #241c1c;
+    color: var(--color-sub);
   }
 
   &__button {
@@ -208,7 +208,7 @@ export default {
 
     &-username {
       font-size: 14px;
-      color: rgba(0, 0, 0, 0.65);
+      color: var(--color-title-light);
       @include ellipsis;
     }
   }

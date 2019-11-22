@@ -216,7 +216,7 @@ export default {
 <style lang='scss' scoped>
 .course {
   padding-bottom: 200px;
-  background-color: #f4f4f4;
+  background-color: var(--color-background-dark);
   .appbar {
     position: sticky;
     top: 0;
@@ -233,7 +233,7 @@ export default {
     margin-top: 40px;
     padding: 10px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: var(--color-background);
 
     &-video {
       flex: 1;

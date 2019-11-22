@@ -17,6 +17,18 @@
         <li class="title">
           <slot />
         </li>
+        <li class="night-mode">
+          <el-tooltip effect="dark" :content="nightMode ? '日光模式' : '夜间模式'">
+            <el-button
+              class="night-mode-button"
+              :style="{backgroundColor: !nightMode ? '#303133e8' : '', color: nightMode ? '#303133e8' : ''}"
+              @click="toggleNightMode(!nightMode)"
+              type="warning"
+              :icon="nightMode ? 'el-icon-sunny' : 'el-icon-moon'"
+              circle
+            />
+          </el-tooltip>
+        </li>
         <li class="user">
           <el-dropdown
             v-if="token"
@@ -86,6 +98,8 @@ export default {
   methods: {
     ...mapMutations('user', ['logout', 'login']),
 
+    ...mapMutations('app', ['toggleNightMode']),
+
     ...mapActions('user', ['saveLogin']),
 
     handleBack() {
@@ -150,7 +164,7 @@ export default {
   computed: {
     ...mapState('user', ['token', 'user']),
 
-    ...mapState('app', ['isMobile'])
+    ...mapState('app', ['isMobile', 'nightMode'])
   }
 };
 </script>
@@ -173,6 +187,17 @@ export default {
       justify-content: space-between;
       align-items: center;
       height: inherit;
+
+      .night-mode {
+        margin-right: 20px;
+
+        .night-mode-button {
+          padding: 6px;
+          background-color: #f5f5f5;
+          font-size: 20px;
+          border: none;
+        }
+      }
 
       .logo {
         display: flex;
@@ -199,11 +224,12 @@ export default {
       }
 
       .title {
-        max-width: 640px;
+        flex: 1;
         margin: 0 10px;
         @include ellipsis;
         font-weight: 500;
         font-size: 22px;
+        text-align: center;
         color: #292525;
       }
 
@@ -232,11 +258,15 @@ export default {
   .user__name {
     display: none !important;
   }
+
+  .night-mode {
+    margin-right: 5px !important;
+  }
 }
 
 @media only screen and (max-width: 797px) {
   .user__name {
-    color: '#333' !important;
+    color: var(--color-title) !important;
   }
 }
 </style>

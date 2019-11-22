@@ -162,7 +162,7 @@ export default {
       display: flex;
       margin-top: 40px;
       padding: 20px;
-      background-color: #fff;
+      background-color: var(--color-background-light);
       border-radius: 5px;
     }
 
@@ -188,7 +188,7 @@ export default {
     margin-bottom: 8px;
     padding: 20px;
     border-radius: 5px;
-    background-color: #fff;
+    background-color: var(--color-background-light);
 
     &-header {
       display: flex;
@@ -204,7 +204,7 @@ export default {
       font-size: 16px;
       font-weight: 600;
       margin-bottom: 6px;
-      color: #211615;
+      color: var(--color-title);
     }
 
     &-date {
@@ -218,7 +218,7 @@ export default {
         margin: 15px 0;
         line-height: 1.4;
         font-size: 16px;
-        color: #4c4e4d;
+        color: var(--color-sub);
       }
     }
 
