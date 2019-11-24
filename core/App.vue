@@ -110,6 +110,7 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  // TODO: CSS变量使用
   color: var(--color-default);
 }
 
@@ -120,6 +121,7 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 99999;
+  // TODO: 混合模式
   mix-blend-mode: darken;
   background-color: rgba(0, 0, 0, 0.2);
   pointer-events: none;

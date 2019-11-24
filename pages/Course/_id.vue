@@ -117,6 +117,7 @@ export default {
     },
 
     handleAddLearner() {
+      // TODO: ES6 语法
       const { id, user, courses, learner, saveLearner, saveCourses } = this;
       addLearner(id).then(() => {
         saveLearner([user, ...learner.filter(({ openId }) => openId !== user.openId)].slice(0, 3));
