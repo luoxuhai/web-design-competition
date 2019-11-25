@@ -126,10 +126,9 @@ export default {
     );
 
     socket.connect();
-    // TODO: 初始化连接
+    // TODO: WebSocket
     socket.on('connect', e => {
       console.log('connect');
-      // FIXME: 初始化连接
       if (socket.connected) {
         setTimeout(() => {
           socket.emit('broadcast', {

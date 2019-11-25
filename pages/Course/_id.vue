@@ -183,7 +183,7 @@ export default {
       this.player.start(data.content);
     });
 
-    this.player.once('play', () => {
+    this.player.on('play', () => {
       if (this.token)
         // 延时5秒加入课程
         setTimeout(this.handleAddLearner, 5000);
@@ -202,14 +202,15 @@ export default {
     });
 
     this.player.on('playing', () => {
+      clearInterval(barrageInterval);
       barrageInterval = setInterval(this.getBarrage, 2000);
     });
   },
 
-  destroyed() {
+  beforeDestroy() {
+    clearInterval(barrageInterval);
     this.player.destroy();
     window.removeEventListener('scroll', this.changeFadeAppbar);
-    clearInterval(barrageInterval);
   }
 };
 </script>

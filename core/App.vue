@@ -110,7 +110,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  // TODO: CSS变量使用
   color: var(--color-default);
 }
 

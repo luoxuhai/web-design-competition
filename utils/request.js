@@ -40,7 +40,6 @@ function errorHandle(statusCode) {
             message: `${statusCode}: ${errCodeMessage[statusCode]}`
         });
 }
-// TODO: Ajax技术
 const instance = axios.create({
     baseURL: BASE_URL,
     timeout: 6000
@@ -48,7 +47,6 @@ const instance = axios.create({
 
 instance.interceptors.request.use(
     config => {
-        // TODO: jwt身份验证
         config.headers.Authorization = `Bearer ${createStore()._modules.root.state.user.token ||
             ''}`;
         return config;
