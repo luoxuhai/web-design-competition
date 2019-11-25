@@ -153,10 +153,7 @@ export default {
 
       window.loginWin = QC.Login.showPopup({
         appId: '101816819',
-        redirectURI:
-          process.env.NODE_ENV === 'development'
-            ? 'http://127.0.0.1:3000/home'
-            : 'https://open.furuzix.top/home'
+        redirectURI: location.origin + '/home'
       });
     }
   },

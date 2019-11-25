@@ -104,6 +104,7 @@ export default {
             content: content.trim()
           });
           Message.success({ message: '评论成功!' });
+          this.content = '';
         })
         .catch(() => Message.error({ message: '评论失败!' }));
     },

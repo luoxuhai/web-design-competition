@@ -201,14 +201,15 @@ export default {
     });
 
     this.player.on('playing', () => {
+      clearInterval(barrageInterval);
       barrageInterval = setInterval(this.getBarrage, 2000);
     });
   },
 
   destroyed() {
+    clearInterval(barrageInterval);
     this.player.destroy();
     window.removeEventListener('scroll', this.changeFadeAppbar);
-    clearInterval(barrageInterval);
   }
 };
 </script>
