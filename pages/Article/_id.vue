@@ -114,7 +114,7 @@ export default {
 
     changeFadeAppbar() {
       const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
-      if (scrollTop < 150) this.opacity = scrollTop - 320;
+      if (scrollTop < 150) this.opacity = scrollTop / 150;
       else this.opacity = 1;
 
       if (
