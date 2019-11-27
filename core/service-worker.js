@@ -6,7 +6,7 @@
 
 /* globals workbox */
 workbox.core.setCacheNameDetails({
-    prefix: 'lavas-cache',
+    prefixs: 'scache',
     suffix: 'v1',
     precache: 'install-time',
     runtime: 'run-time',
@@ -39,7 +39,7 @@ workbox.routing.registerRoute(
 workbox.routing.registerRoute(
     /^https:\/\/ito\.oss-cn-beijing\.aliyuncs\.com\/web-design-competition\/\D+/i,
     workbox.strategies.cacheFirst({
-        cacheName: 'lavas-cache-images',
+        cacheName: 'cache-resources',
         plugins: [
             new workbox.expiration.Plugin({
                 maxEntries: 100,

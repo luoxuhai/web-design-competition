@@ -120,7 +120,7 @@ export default {
   right: 0;
   bottom: 0;
   z-index: 99999;
-  // TODO: 混合模式
+  // TODO: CSS混合模式
   mix-blend-mode: darken;
   background-color: rgba(0, 0, 0, 0.2);
   pointer-events: none;

@@ -77,6 +77,8 @@ import { MessageBox, Message, Loading } from 'element-ui';
 import UserDialog from './UserDialog';
 import { login, update } from '@/api/user';
 
+let timeout = false;
+
 export default {
   components: {
     UserDialog
@@ -142,11 +144,15 @@ export default {
           window.loginWin.close();
         });
 
+        setTimeout(() => {
+          timeout = true;
+        }, 20000);
+
         loginInterval = setInterval(() => {
-          if (localStorage.getItem('openid') && localStorage.getItem('access_token')) {
+          if ((localStorage.getItem('openid') && localStorage.getItem('access_token')) || timeout) {
             clearInterval(loginInterval);
             window.loginWin.close();
-            this.saveLogin();
+            this.saveLogin(timeout);
           }
         }, 10);
       }

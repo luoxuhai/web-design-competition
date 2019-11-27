@@ -61,7 +61,7 @@ export default {
 
 <style lang='scss' scoped>
 @import '@/assets/scss/_mixins.scss';
-// TODO: 媒体查询自适应
+// TODO: CSS媒体查询
 @media screen and (max-width: 600px) {
   .header__title {
     font-size: 40px !important;

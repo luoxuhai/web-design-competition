@@ -36,7 +36,7 @@ export const mutations = {
     },
 
     toggleNightMode(state, nightMode) {
-        // TODO: CSS变量
+        // TODO: CSS变量应用
         html.style.setProperty('--color-background', nightMode ? 'black' : 'white');
         html.style.setProperty('--color-background-light', nightMode ? '#303133' : 'white');
         html.style.setProperty('--color-background-dark', nightMode ? 'black' : '#f4f4f4');
